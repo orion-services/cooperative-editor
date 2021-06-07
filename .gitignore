@@ -1,4 +1,6 @@
-/target/
 /build/
+/target/
+/WebContent/dist/
+/WebContent/node_modules/
 .settings
 .tern-project

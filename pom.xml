@@ -93,7 +93,7 @@
 						WEB-INF/lib/activation-1.1.jar,
 						WEB-INF/lib/javaee-api-7.0.jar
 					</packagingExcludes>
-					<warSourceDirectory>WebContent</warSourceDirectory>
+					<warSourceDirectory>WebContent/dist</warSourceDirectory>
 					<failOnMissingWebXml>false</failOnMissingWebXml>
 				</configuration>
 			</plugin>
