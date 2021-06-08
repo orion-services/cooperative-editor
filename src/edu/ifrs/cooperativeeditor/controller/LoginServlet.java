@@ -113,8 +113,15 @@ public class LoginServlet extends HttpServlet {
 
 		JsonObject jsonRequestObject = new JsonParser().parse(json.toString()).getAsJsonObject();
 		JsonObject jsonResponseObject = new JsonObject();
+		boolean checkLogin = false;
 		String email = null;
 		String password = null;
+
+		try {
+			checkLogin = jsonRequestObject.get("checkLogin").getAsBoolean();
+		} catch (Exception e) {
+			// TODO Exception
+		}
 
 		try {
 			email = jsonRequestObject.get("useremail").getAsString();
@@ -125,20 +132,25 @@ public class LoginServlet extends HttpServlet {
 
 		response.setContentType("application/json");
 
-		User user = dao.getUser(email, password);
-		if (user != null) {
-			request.getSession().setAttribute("userId", user.getId());
-			request.getSession().setAttribute("name", user.getName());
+		if (checkLogin) { //Just checking if a user is logged in
+			boolean loggedIn = request.getSession().getAttribute("userId") != null;
+			jsonResponseObject.addProperty("isLoggedIn", loggedIn);
+		} else { //Actually logging in
+			User user = dao.getUser(email, password);
+			if (user != null) {
+				request.getSession().setAttribute("userId", user.getId());
+				request.getSession().setAttribute("name", user.getName());
 
-			jsonResponseObject.addProperty("isLoginValid", true);
+				jsonResponseObject.addProperty("isLoginValid", true);
 
-			if (request.getSession().getAttribute("urlBeforeRedirect") != null) {
-				String url = request.getSession().getAttribute("urlBeforeRedirect").toString();
-				jsonResponseObject.addProperty("urlRedirect", url);
+				if (request.getSession().getAttribute("urlBeforeRedirect") != null) {
+					String url = request.getSession().getAttribute("urlBeforeRedirect").toString();
+					jsonResponseObject.addProperty("urlRedirect", url);
+				}
+
+			} else {
+				jsonResponseObject.addProperty("isLoginValid", false);
 			}
-
-		} else {
-			jsonResponseObject.addProperty("isLoginValid", false);
 		}
 		
 		log.log(Level.INFO, "LoginServlet method doPOST AttributeNames: "+request.getSession().getAttributeNames());

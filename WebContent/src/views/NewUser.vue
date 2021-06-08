@@ -4,27 +4,26 @@
                 <v-col md="4" sm="8" cols="12" align-self="center">
                     <v-card flat class="card-radius logincardbg">
                         <v-card-text class="py-10">
-                            <v-row justify="center" no-gutters align="center" class="mt-10">
-                                <v-col cols="3 text-center" align-self="center">
-                                    <div class="logo">
-                                        <h3 class="primary--text">ORION</h3>
-                                    </div>
-                                </v-col>
-                            </v-row>
                             <v-row class="px-2 mt-5">
+                                <v-col cols="12">
+                                    <v-text-field label="Nome" color="primary"></v-text-field>
+                                </v-col>
                                 <v-col cols="12">
                                     <v-text-field label="E-mail" color="primary"></v-text-field>
                                 </v-col>
                                 <v-col cols="12">
                                     <v-text-field label="Senha" color="primary"></v-text-field>
                                 </v-col>
+                                <v-col cols="12">
+                                    <v-text-field label="Senha (confirmação)" color="primary"></v-text-field>
+                                </v-col>
                             </v-row>
                             <v-row class="px-3">
                                 <v-col cols="12" md="6" class="mt-3">
-                                    <v-btn color="primary" @click="$router.push('/atividades')" depressed block rounded large>Entrar</v-btn>
+                                    <v-btn color="primary" @click="$router.push('/login')" depressed block rounded large>Criar usuário</v-btn>
                                 </v-col>
                                 <v-col cols="12" md="6" class="mt-3">
-                                    <v-btn color="primary" @click="$router.push('/new-user')" depressed block rounded outlined large>Cadastre-se</v-btn>
+                                    <v-btn color="primary" @click="$router.push('/login')" depressed block rounded outlined large>Cancelar</v-btn>
                                 </v-col>
                             </v-row>
                         </v-card-text>
@@ -40,7 +39,7 @@
 
 <script>
 export default {
-    name: "Login",
+    name: "NewUser",
     data() {
         return {
 

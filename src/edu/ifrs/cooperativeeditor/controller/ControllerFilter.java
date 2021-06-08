@@ -74,8 +74,10 @@ public class ControllerFilter implements Filter {
 		if (loggedIn || allowedPath) {
 			chain.doFilter(req, res);
 		} else {
-			session.setAttribute("urlBeforeRedirect", request.getRequestURL());
-			response.sendRedirect(request.getContextPath() + "/login.html");
+			chain.doFilter(req, res);
+			//XXX
+			//session.setAttribute("urlBeforeRedirect", request.getRequestURL());
+			//response.sendRedirect(request.getContextPath() + "/login.html");
 		}
 	}
 
