@@ -68,7 +68,7 @@ export default {
                 //Properly handle status codes (200, 404, ...)
 
                 if (response.isLoginValid) {
-                    this.$router.push('/atividades');
+                    this.$router.push('/activities');
                 } else {
                     alert('Error: invalid user.');
                 }

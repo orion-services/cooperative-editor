@@ -64,7 +64,7 @@
 
         
         <v-bottom-navigation
-            v-if="$vuetify.breakpoint.smAndDown && $route.path != '/atividades/view'"
+            v-if="$vuetify.breakpoint.smAndDown && $route.path != '/activities/view'"
             absolute
             bottom
             grow

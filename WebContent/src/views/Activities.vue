@@ -8,7 +8,7 @@
 
             <v-row class="mt-10 mb-15 pb-5">
                 <v-col cols="12" sm="6" md="4" v-for="i in 4" :key="i">
-                    <v-card class="darkbg card-radius" flat @click="$router.push('/atividades/view')">
+                    <v-card class="darkbg card-radius" flat @click="$router.push('/activities/view')">
                         <v-card-text>
                             <v-row align="center" justify="center">
                                 <v-col cols="10">
