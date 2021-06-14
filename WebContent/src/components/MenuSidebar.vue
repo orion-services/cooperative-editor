@@ -54,7 +54,7 @@
                         <span class="pt-5">Modo noturno</span>
                         <v-switch color="primary" @change="switchTheme"></v-switch>
                     </div>
-                    <span class="logout" @click="$router.push('/login')">Sair</span>
+                    <span class="logout" @click="logout()">Sair</span>
                 </v-col>
             </v-row>
             </v-navigation-drawer>
@@ -118,6 +118,28 @@
 export default {
     name: "MenuSidebar",
     methods: {
+        logout() {
+            let options = {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json; charset=UTF-8' },
+                body: JSON.stringify({
+                    useremail: this.email,
+                    password: this.password
+                })
+            };
+
+            fetch('/CooperativeEditor/login', options).then(async res => {
+                let response = await res.json();
+
+                //TODO:
+                //Properly handle status codes (200, 404, ...)
+
+                if (response.isLogoutValid) {
+                    this.$router.push('/login');
+                }
+            });
+        },
+
         switchTheme() {
             this.$vuetify.theme.dark = !this.$vuetify.theme.dark
         }
