@@ -13,15 +13,15 @@
                             </v-row>
                             <v-row class="px-2 mt-5">
                                 <v-col cols="12">
-                                    <v-text-field label="E-mail" color="primary"></v-text-field>
+                                    <v-text-field label="E-mail" color="primary" v-model="email"></v-text-field>
                                 </v-col>
                                 <v-col cols="12">
-                                    <v-text-field label="Senha" color="primary"></v-text-field>
+                                    <v-text-field label="Senha" color="primary" v-model="password" type="password"></v-text-field>
                                 </v-col>
                             </v-row>
                             <v-row class="px-3">
                                 <v-col cols="12" md="6" class="mt-3">
-                                    <v-btn color="primary" @click="$router.push('/atividades')" depressed block rounded large>Entrar</v-btn>
+                                    <v-btn color="primary" @click="login()" depressed block rounded large>Entrar</v-btn>
                                 </v-col>
                                 <v-col cols="12" md="6" class="mt-3">
                                     <v-btn color="primary" @click="$router.push('/new-user')" depressed block rounded outlined large>Cadastre-se</v-btn>
@@ -43,6 +43,36 @@ export default {
     name: "Login",
     data() {
         return {
+            email: '',
+            password: ''
+        }
+    },
+    methods: {
+        login: function() {
+            let options = {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json; charset=UTF-8' },
+                body: JSON.stringify({
+                    useremail: this.email,
+                    password: this.password
+                })
+            };
+
+            fetch('/CooperativeEditor/login', options).then(async res => {
+                let response = await res.json();
+
+                //TODO:
+                //Validate new user (including email, allowed password, and correct password confirmation
+                //On success, display an alert/toast
+                //On error, display an error message on the text fields
+                //Properly handle status codes (200, 404, ...)
+
+                if (response.isLoginValid) {
+                    this.$router.push('/atividades');
+                } else {
+                    alert('Error: invalid user.');
+                }
+            });
 
         }
     }

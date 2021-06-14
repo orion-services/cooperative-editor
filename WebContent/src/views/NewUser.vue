@@ -6,21 +6,21 @@
                         <v-card-text class="py-10">
                             <v-row class="px-2 mt-5">
                                 <v-col cols="12">
-                                    <v-text-field label="Nome" color="primary"></v-text-field>
+                                    <v-text-field v-model="newUserName" label="Nome" color="primary"></v-text-field>
                                 </v-col>
                                 <v-col cols="12">
-                                    <v-text-field label="E-mail" color="primary"></v-text-field>
+                                    <v-text-field v-model="newUserEmail" label="E-mail" color="primary"></v-text-field>
                                 </v-col>
                                 <v-col cols="12">
-                                    <v-text-field label="Senha" color="primary"></v-text-field>
+                                    <v-text-field v-model="newUserPassword" label="Senha" color="primary" type="password"></v-text-field>
                                 </v-col>
                                 <v-col cols="12">
-                                    <v-text-field label="Senha (confirmação)" color="primary"></v-text-field>
+                                    <v-text-field v-model="newUserPasswordConfirm" label="Senha (confirmação)" color="primary" type="password"></v-text-field>
                                 </v-col>
                             </v-row>
                             <v-row class="px-3">
                                 <v-col cols="12" md="6" class="mt-3">
-                                    <v-btn color="primary" @click="$router.push('/login')" depressed block rounded large>Criar usuário</v-btn>
+                                    <v-btn color="primary" @click="createUser" depressed block rounded large>Criar usuário</v-btn>
                                 </v-col>
                                 <v-col cols="12" md="6" class="mt-3">
                                     <v-btn color="primary" @click="$router.push('/login')" depressed block rounded outlined large>Cancelar</v-btn>
@@ -42,7 +42,40 @@ export default {
     name: "NewUser",
     data() {
         return {
+            newUserName: '',
+            newUserEmail: '',
+            newUserPassword: '',
+            newUserPasswordConfirm: '',
+        }
+    },
+    methods: {
+        createUser: function() {
+            let options = {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json; charset=UTF-8' },
+                body: JSON.stringify({
+                    name: this.newUserName,
+                    email: this.newUserEmail,
+                    password: this.newUserPassword
+                })
+            };
 
+            fetch('/CooperativeEditor/login', options).then(async res => {
+                let response = await res.json();
+
+                //TODO:
+                //Validate new user (including email, allowed password, and correct password confirmation
+                //On success, display an alert/toast
+                //On error, display an error message on the text fields
+                //Properly handle status codes (200, 404, ...)
+
+                if (response.isUserValid) {
+                    alert('User created successfully.');
+                    this.$router.push('/login');
+                } else {
+                    alert('Error: unable to create the user.');
+                }
+            });
         }
     }
 }
