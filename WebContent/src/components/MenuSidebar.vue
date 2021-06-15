@@ -122,10 +122,6 @@ export default {
             let options = {
                 method: 'GET',
                 headers: { 'Content-Type': 'application/json; charset=UTF-8' },
-                body: JSON.stringify({
-                    useremail: this.email,
-                    password: this.password
-                })
             };
 
             fetch('/CooperativeEditor/login', options).then(async res => {
@@ -135,6 +131,7 @@ export default {
                 //Properly handle status codes (200, 404, ...)
 
                 if (response.isLogoutValid) {
+                    this.$root.isLoggedIn = false;
                     this.$router.push('/login');
                 }
             });

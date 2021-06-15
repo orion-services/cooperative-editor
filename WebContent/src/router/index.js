@@ -10,18 +10,20 @@ Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '*',
-    redirect: '/login'
-  },
-  {
     path: '/login',
     name: 'Login',
-    component: Login
+    component: Login,
+    meta: {
+      guest: true
+    }
   },
   {
     path: '/new-user',
     name: 'New User',
-    component: NewUser
+    component: NewUser,
+    meta: {
+      guest: true
+    }
   },
   {
     path: '/',
@@ -55,6 +57,26 @@ const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes
+})
+
+router.beforeEach((to, from, next) => {
+  if (!router.app.loginChecked) {
+    return;
+  }
+
+  if (to.matched.some(record => record.meta.guest)) {
+    if (router.app.isLoggedIn) {
+      next({ path: '/activities' });
+    } else {
+      next();
+    }
+  } else {
+    if (router.app.isLoggedIn) {
+      next();
+    } else {
+      next({ path: '/login' });
+    }
+  }
 })
 
 export default router

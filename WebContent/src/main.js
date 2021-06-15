@@ -34,6 +34,8 @@ new Vue({
       //If the user is not logged in, redirect to /login
       if (!this.isLoggedIn) {
         router.push('/login');
+      } else {
+        router.push('/');
       }
     });
   }

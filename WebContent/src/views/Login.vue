@@ -63,12 +63,13 @@ export default {
 
                 //TODO:
                 //Validate new user (including email, allowed password, and correct password confirmation
-                //On success, display an alert/toast
+                //On success, display a toast (or similar)
                 //On error, display an error message on the text fields
                 //Properly handle status codes (200, 404, ...)
 
                 if (response.isLoginValid) {
-                    this.$router.push('/activities');
+                    this.$root.isLoggedIn = true;
+                    this.$router.push('/');
                 } else {
                     alert('Error: invalid user.');
                 }
