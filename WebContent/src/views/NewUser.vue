@@ -61,20 +61,22 @@ export default {
             };
 
             fetch('/CooperativeEditor/login', options).then(async res => {
-                let response = await res.json();
+                let data = await res.json();
 
-                //TODO:
-                //Validate new user (including email, allowed password, and correct password confirmation
-                //On success, display an alert/toast
-                //On error, display an error message on the text fields
-                //Properly handle status codes (200, 404, ...)
-
-                if (response.isUserValid) {
+                if (res.ok && data.isUserValid) {
+                    //TODO:
+                    //Validate new user (including email, allowed password, and correct password confirmation
+                    //Display a toast (or similar)
                     alert('User created successfully.');
                     this.$router.push('/login');
                 } else {
+                    //TODO:
+                    //Check status code (404, 500, ...)
+                    //Display an error message on the text fields
                     alert('Error: unable to create the user.');
                 }
+            }).catch(error => {
+                //TODO: handle network errors
             });
         }
     }

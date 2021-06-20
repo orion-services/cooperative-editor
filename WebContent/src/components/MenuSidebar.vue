@@ -125,15 +125,16 @@ export default {
             };
 
             fetch('/CooperativeEditor/login', options).then(async res => {
-                let response = await res.json();
+                let data = await res.json();
 
-                //TODO:
-                //Properly handle status codes (200, 404, ...)
-
-                if (response.isLogoutValid) {
+                if (res.ok && data.isLogoutValid) {
                     this.$root.isLoggedIn = false;
                     this.$router.push('/login');
+                } else {
+                    //TODO: handle errors
                 }
+            }).catch(error => {
+                //TODO: handle network errors
             });
         },
 
