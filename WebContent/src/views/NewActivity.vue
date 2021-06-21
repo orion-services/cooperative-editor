@@ -23,7 +23,19 @@
                                     <v-time-picker v-model="startTime" color="primary"></v-text-field>
                                 </v-col>
                                 <v-col cols="12">
-                                    <v-autocomplete chips deletable-chips multiple :items="participantsItems" v-model="participantsValues" label="Participantes" color="primary"></v-text-field>
+                                    <v-autocomplete
+                                        chips deletable-chips
+                                        multiple
+                                        hide-details
+                                        hide-no-data
+                                        :items="participantsItems"
+                                        item-text="name"
+                                        item-value="id"
+                                        v-model="participantsValues"
+                                        :search-input.sync="participantsSearch"
+                                        label="Participantes"
+                                        color="primary"
+                                    ></v-text-field>
                                 </v-col>
                                 <v-col cols="12">
                                     <v-text-field v-model="evaluationCriteria" label="Critérios de avaliação" color="primary"></v-text-field>
@@ -55,14 +67,19 @@ export default {
             maxRounds: 1,
             startDate: '',
             startTime: '',
-            participantsItems: [ //TODO: load actual participants
-                { value: 1, text: 'Foo' },
-                { value: 2, text: 'Bar' },
-                { value: 3, text: 'Baz' },
-                { value: 4, text: 'Quux' },
-            ],
+            participantsSearch: '',
+            participantsItems: [],
             participantsValues: [],
             evaluationCriteria: '',
+        }
+    },
+    watch: {
+        participantsSearch(val) {
+            if (val) {
+                this.requestPeopleSuggestion(val);
+            } else {
+                this.participantsItems = [];
+            }
         }
     },
     methods: {
@@ -84,7 +101,26 @@ export default {
         requestPartialSubmitProduction: function() {
         },
 
-        requestPeopleSuggestion: function() {
+        requestPeopleSuggestion: function(partialName) {
+            let options = {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json; charset=UTF-8' },
+            };
+
+            fetch('/CooperativeEditor/webservice/form/peoplesuggestion/' + partialName, options).then(async res => {
+                let data = await res.json();
+
+                if (res.ok) {
+                    this.participantsItems = data;
+                } else {
+                    //TODO:
+                    //Check status code (404, 500, ...)
+                    //Display an error message on the text fields
+                    alert('Error: unable to create the user.');
+                }
+            }).catch(error => {
+                //TODO: handle network errors
+            });
         },
 
         requestSaveProduction: function() {
