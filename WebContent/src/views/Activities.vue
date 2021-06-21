@@ -3,7 +3,7 @@
         <v-container class="pt-15">
             <div class="d-flex justify-space-between">
                 <p class="primary--text heading-1">Atividades</p>
-                <v-btn depressed outlined color="primary">Criar nova <v-icon>mdi-plus</v-icon></v-btn>
+                <v-btn depressed outlined color="primary" @click="$router.push('/activities/new')">Criar nova <v-icon>mdi-plus</v-icon></v-btn>
             </div>
 
             <v-row class="mt-10 mb-15 pb-5">

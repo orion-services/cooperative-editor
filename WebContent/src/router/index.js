@@ -4,6 +4,7 @@ import Login from '../views/Login.vue'
 import NewUser from '../views/NewUser.vue'
 import Dashboard from '../views/Dashboard'
 import Activities from '../views/Activities'
+import NewActivity from '../views/NewActivity'
 import ViewActivity from '../views/ViewActivity'
 
 Vue.use(VueRouter)
@@ -40,6 +41,11 @@ const routes = [
         path: "activities/view",
         name: "View Activity",
         component: ViewActivity
+      },
+      {
+        path: "activities/new",
+        name: "New Activity",
+        component: NewActivity
       }
     ]
   },
