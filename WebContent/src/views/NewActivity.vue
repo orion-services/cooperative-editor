@@ -24,7 +24,8 @@
                                 </v-col>
                                 <v-col cols="12">
                                     <v-autocomplete
-                                        chips deletable-chips
+                                        chips
+                                        deletable-chips
                                         multiple
                                         hide-details
                                         hide-no-data
@@ -33,6 +34,7 @@
                                         item-value="id"
                                         v-model="participantsValues"
                                         :search-input.sync="participantsSearch"
+                                        v-on:change="onChangeParticipants();"
                                         label="Participantes"
                                         color="primary"
                                     ></v-text-field>
@@ -71,22 +73,90 @@ export default {
             participantsItems: [],
             participantsValues: [],
             evaluationCriteria: '',
+            production: {},
         }
     },
     watch: {
+        goal(val) {
+            //TODO: decide which other properties to watch while doing partial
+            //submits
+            this.requestPartialSubmitProduction();
+        },
+
         participantsSearch(val) {
             if (val) {
                 this.requestPeopleSuggestion(val);
-            } else {
-                this.participantsItems = [];
             }
-        }
+        },
     },
     methods: {
+        saveActivity: function() {
+            this.requestSaveProduction();
+        },
+
+        onChangeParticipants: function() {
+            //TODO:
+            //Allow participants to be removed
+            //Prevent repetition of user production configuration items
+
+            for (let i in this.participantsItems) {
+                if (!this.production.userProductionConfigurations) {
+                    break;
+                }
+
+                for (let j in this.production.userProductionConfigurations) {
+                    if (this.production.userProductionConfigurations[j].id == this.participantsItems[i]) {
+                        return;
+                    }
+                }
+
+                this.requestUserProductionConfiguration(this.participantsItems[i].id);
+            }
+        },
+
         requestRubricProductionConfiguration: function() {
         },
 
-        requestUserProductionConfiguration: function() {
+        requestUserProductionConfiguration: function(userId) {
+            let options = {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json; charset=UTF-8' },
+                body: JSON.stringify({
+                    production: { id: this.production.id },
+                    user: { id: userId },
+                })
+            };
+
+            fetch('/CooperativeEditor/webservice/form/userProductionConfiguration', options).then(async res => {
+                let data = await res.json();
+
+                if (res.ok) {
+                    let index = -1;
+
+                    for (let i in this.production.userProductionConfigurations) {
+                        if (this.production.userProductionConfigurations[i].id == data.id) {
+                            index = i;
+                            break;
+                        }
+                    }
+
+                    if (index == -1) {
+                        this.production.userProductionConfigurations.push(data);
+                    } else {
+                        //Replace
+                    }
+
+                    console.log(this.production);
+                } else {
+                    //TODO:
+                    //Check status code (404, 500, ...)
+                    //Display an error message on the text fields
+                    alert('Error: unable to create the user.');
+                }
+            }).catch(error => {
+                //TODO: handle network errors
+            });
+
         },
 
         requestDisconnectRubric: function() {
@@ -99,6 +169,36 @@ export default {
         },
 
         requestPartialSubmitProduction: function() {
+            this.production.participatInProduction = false; //XXX: typo
+            this.production.rubricProductionConfigurations = [];
+            this.production.userProductionConfigurations = [];
+            this.production.startOfProduction = 0; //TODO: correct time and date
+            this.production.objective = this.goal;
+            this.production.minimumTickets = this.minRounds;
+            this.production.limitTickets = this.maxRounds;
+
+            let options = {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json; charset=UTF-8' },
+                body: JSON.stringify(this.production)
+            };
+
+            fetch('/CooperativeEditor/webservice/form/partialSubmit', options).then(async res => {
+                let data = await res.json();
+
+                if (res.ok) {
+                    if (data.id != this.production.id) {
+                        this.production.id = data.id;
+                    }
+                } else {
+                    //TODO:
+                    //Check status code (404, 500, ...)
+                    //Display an error message on the text fields
+                    alert('Error: unable to create the user.');
+                }
+            }).catch(error => {
+                //TODO: handle network errors
+            });
         },
 
         requestPeopleSuggestion: function(partialName) {
@@ -124,20 +224,31 @@ export default {
         },
 
         requestSaveProduction: function() {
+            this.production.participatInProduction = false; //XXX: typo
+            this.production.rubricProductionConfigurations = [];
+            this.production.userProductionConfigurations = [];
+            this.production.startOfProduction = 0; //TODO: correct time and date
+            this.production.objective = this.goal;
+            this.production.minimumTickets = this.minRounds;
+            this.production.limitTickets = this.maxRounds;
+
             let options = {
-                method: 'PUT',
+                method: 'POST',
                 headers: { 'Content-Type': 'application/json; charset=UTF-8' },
-                body: JSON.stringify({
-                    goal: this.goal,
-                    //TODO: complete
-                })
+                body: JSON.stringify(this.production)
             };
 
+            //TODO: validate entered data
             fetch('/CooperativeEditor/webservice/form/saveProduction', options).then(async res => {
                 let data = await res.json();
 
                 if (res.ok) {
-                    //TODO
+                    if (data.isProductionValid) {
+                        alert('Production successfully created.');
+                        //TODO: Redirect to the new production URL
+                    }
+
+                    console.log(data);
                 } else {
                     //TODO:
                     //Check status code (404, 500, ...)
