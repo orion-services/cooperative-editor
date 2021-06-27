@@ -38,6 +38,8 @@ new Vue({
         router.push('/');
       }
     });
+
+    //TODO: handle errors
   }
 }).$mount('#app')
 

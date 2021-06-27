@@ -7,7 +7,7 @@
             </div>
 
             <v-row class="mt-10 mb-15 pb-5">
-                <v-col cols="12" sm="6" md="4" :key="i">
+                <v-col cols="12" sm="6" md="4" v-for="i in 4" :key="i">
                     <v-card v-for="activity in activities" class="darkbg card-radius" flat @click="$router.push('/activities/view')">
                         <v-card-text>
                             <v-row align="center" justify="center">
@@ -41,36 +41,9 @@ export default {
     data() {
         return {
             activities: [
-                /*
-                (test data)
-
-                { id: 1, objective: "Atividade 1", url: "" },
-                { id: 2, objective: "Atividade 2", url: "" },
-                { id: 3, objective: "Atividade 3", url: "" },
-                { id: 4, objective: "Atividade 4", url: "" },
-                { id: 5, objective: "Atividade 5", url: "" },
-                */
+                { id: 1, objective: "Test", url: "" },
             ],
         }
-    },
-    created: function() { 
-        console.log('Created!');
-
-        let options = {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json; charset=UTF-8' },
-        };
-
-        fetch('/CooperativeEditor/webservice/list/productionList', options).then(async res => {
-            let data = await res.json();
-
-            if (res.ok) {
-                console.log(data);
-                this.activities = data;
-            }
-        });
-
-        //TODO: handle errors
     },
     methods: {
     }

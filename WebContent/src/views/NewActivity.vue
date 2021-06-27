@@ -244,11 +244,9 @@ export default {
 
                 if (res.ok) {
                     if (data.isProductionValid) {
-                        alert('Production successfully created.');
                         //TODO: Redirect to the new production URL
+                        this.$router.push('/activities');
                     }
-
-                    console.log(data);
                 } else {
                     //TODO:
                     //Check status code (404, 500, ...)
