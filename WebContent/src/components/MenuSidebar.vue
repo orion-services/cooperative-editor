@@ -115,26 +115,19 @@
 </template>
 
 <script>
+import api from '../api.js';
+
 export default {
     name: "MenuSidebar",
     methods: {
         logout() {
-            let options = {
-                method: 'GET',
-                headers: { 'Content-Type': 'application/json; charset=UTF-8' },
-            };
-
-            fetch('/CooperativeEditor/login', options).then(async res => {
-                let data = await res.json();
-
-                if (res.ok && data.isLogoutValid) {
+            api.doGet('/CooperativeEditor/login', (data) => {
+                if (data.isLogoutValid) {
                     this.$root.isLoggedIn = false;
                     this.$router.push('/login');
                 } else {
                     //TODO: handle errors
                 }
-            }).catch(error => {
-                //TODO: handle network errors
             });
         },
 

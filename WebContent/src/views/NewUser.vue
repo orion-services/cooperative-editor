@@ -38,6 +38,8 @@
 </template>
 
 <script>
+import api from '../api.js';
+
 export default {
     name: "NewUser",
     data() {
@@ -50,23 +52,17 @@ export default {
     },
     methods: {
         createUser: function() {
-            let options = {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json; charset=UTF-8' },
-                body: JSON.stringify({
-                    name: this.newUserName,
-                    email: this.newUserEmail,
-                    password: this.newUserPassword
-                })
+            let requestData = {
+                name: this.newUserName,
+                email: this.newUserEmail,
+                password: this.newUserPassword
             };
 
-            fetch('/CooperativeEditor/login', options).then(async res => {
-                let data = await res.json();
-
-                if (res.ok && data.isUserValid) {
+            api.doPut('/CooperativeEditor/login', requestData, (data) => {
+               if (data.isUserValid) {
                     //TODO:
                     //Validate new user (including email, allowed password, and correct password confirmation
-                    //Display a toast (or similar)
+                    //Display a toast (or similar) instead of an alert
                     alert('User created successfully.');
                     this.$router.push('/login');
                 } else {
@@ -75,8 +71,6 @@ export default {
                     //Display an error message on the text fields
                     alert('Error: unable to create the user.');
                 }
-            }).catch(error => {
-                //TODO: handle network errors
             });
         }
     }

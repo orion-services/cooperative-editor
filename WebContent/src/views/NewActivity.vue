@@ -60,6 +60,8 @@
 </template>
 
 <script>
+import api from '../api.js';
+
 export default {
     name: "NewActivity",
     data() {
@@ -118,43 +120,30 @@ export default {
         },
 
         requestUserProductionConfiguration: function(userId) {
-            let options = {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json; charset=UTF-8' },
-                body: JSON.stringify({
-                    production: { id: this.production.id },
-                    user: { id: userId },
-                })
-            };
+            let requestData = {
+	        production: { id: this.production.id },
+	        user: { id: userId },
+            }
 
-            fetch('/CooperativeEditor/webservice/form/userProductionConfiguration', options).then(async res => {
-                let data = await res.json();
+            api.doPost('/CooperativeEditor/webservice/form/userProductionConfiguration', requestData, (data) => {
+                let index = -1;
 
-                if (res.ok) {
-                    let index = -1;
-
-                    for (let i in this.production.userProductionConfigurations) {
-                        if (this.production.userProductionConfigurations[i].id == data.id) {
-                            index = i;
-                            break;
-                        }
+                for (let i in this.production.userProductionConfigurations) {
+                    if (this.production.userProductionConfigurations[i].id == data.id) {
+                        index = i;
+                        break;
                     }
-
-                    if (index == -1) {
-                        this.production.userProductionConfigurations.push(data);
-                    } else {
-                        //Replace
-                    }
-
-                    console.log(this.production);
-                } else {
-                    //TODO:
-                    //Check status code (404, 500, ...)
-                    //Display an error message on the text fields
-                    alert('Error: unable to create the user.');
                 }
-            }).catch(error => {
-                //TODO: handle network errors
+
+                if (index == -1) {
+                    this.production.userProductionConfigurations.push(data);
+                } else {
+                    //Replace
+                }
+
+                //TODO:
+                //Check status code (404, 500, ...)
+                //Display an error message on the text fields
             });
 
         },
@@ -177,49 +166,24 @@ export default {
             this.production.minimumTickets = this.minRounds;
             this.production.limitTickets = this.maxRounds;
 
-            let options = {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json; charset=UTF-8' },
-                body: JSON.stringify(this.production)
-            };
-
-            fetch('/CooperativeEditor/webservice/form/partialSubmit', options).then(async res => {
-                let data = await res.json();
-
-                if (res.ok) {
-                    if (data.id != this.production.id) {
-                        this.production.id = data.id;
-                    }
-                } else {
-                    //TODO:
-                    //Check status code (404, 500, ...)
-                    //Display an error message on the text fields
-                    alert('Error: unable to create the user.');
+            api.doPost('/CooperativeEditor/webservice/form/partialSubmit', this.production, (data) => {
+                if (data.id != this.production.id) {
+                    this.production.id = data.id;
                 }
-            }).catch(error => {
-                //TODO: handle network errors
+
+                //TODO:
+                //Check status code (404, 500, ...)
+                //Display an error message on the text fields
             });
         },
 
         requestPeopleSuggestion: function(partialName) {
-            let options = {
-                method: 'GET',
-                headers: { 'Content-Type': 'application/json; charset=UTF-8' },
-            };
+            api.doGet('/CooperativeEditor/webservice/form/peoplesuggestion/' + partialName, (data) => {
+                this.participantsItems = data;
 
-            fetch('/CooperativeEditor/webservice/form/peoplesuggestion/' + partialName, options).then(async res => {
-                let data = await res.json();
-
-                if (res.ok) {
-                    this.participantsItems = data;
-                } else {
-                    //TODO:
-                    //Check status code (404, 500, ...)
-                    //Display an error message on the text fields
-                    alert('Error: unable to create the user.');
-                }
-            }).catch(error => {
-                //TODO: handle network errors
+                //TODO:
+                //Check status code (404, 500, ...)
+                //Display an error message on the text fields
             });
         },
 
@@ -232,29 +196,16 @@ export default {
             this.production.minimumTickets = this.minRounds;
             this.production.limitTickets = this.maxRounds;
 
-            let options = {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json; charset=UTF-8' },
-                body: JSON.stringify(this.production)
-            };
-
             //TODO: validate entered data
-            fetch('/CooperativeEditor/webservice/form/saveProduction', options).then(async res => {
-                let data = await res.json();
-
-                if (res.ok) {
-                    if (data.isProductionValid) {
-                        //TODO: Redirect to the new production URL
-                        this.$router.push('/activities');
-                    }
-                } else {
-                    //TODO:
-                    //Check status code (404, 500, ...)
-                    //Display an error message on the text fields
-                    alert('Error: unable to create the user.');
+            api.doPost('/CooperativeEditor/webservice/form/saveProduction', this.production, (data) => {
+                if (data.isProductionValid) {
+                    //TODO: Redirect to the new production URL
+                    this.$router.push('/activities');
                 }
-            }).catch(error => {
-                //TODO: handle network errors
+
+                //TODO:
+                //Check status code (404, 500, ...)
+                //Display an error message on the text fields
             });
         },
     }

@@ -36,14 +36,16 @@
 </template>
 
 <script>
+import api from '../api.js';
+
 export default {
     name: "Activities",
     data() {
         return {
             activities: [
-                /*
-                (test data)
+                //XXX: test data
 
+                /*
                 { id: 1, objective: "Atividade 1", url: "" },
                 { id: 2, objective: "Atividade 2", url: "" },
                 { id: 3, objective: "Atividade 3", url: "" },
@@ -53,21 +55,9 @@ export default {
             ],
         }
     },
-    created: function() { 
-        console.log('Created!');
-
-        let options = {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json; charset=UTF-8' },
-        };
-
-        fetch('/CooperativeEditor/webservice/list/productionList', options).then(async res => {
-            let data = await res.json();
-
-            if (res.ok) {
-                console.log(data);
-                this.activities = data;
-            }
+    created() { 
+        api.doGet('/CooperativeEditor/webservice/list/productionList', (data) => {
+            this.activities = data;
         });
 
         //TODO: handle errors

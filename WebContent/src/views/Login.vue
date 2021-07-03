@@ -39,6 +39,8 @@
 </template>
 
 <script>
+import api from '../api.js';
+
 export default {
     name: "Login",
     data() {
@@ -48,20 +50,14 @@ export default {
         }
     },
     methods: {
-        login: function() {
-            let options = {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json; charset=UTF-8' },
-                body: JSON.stringify({
-                    useremail: this.email,
-                    password: this.password
-                })
+        login() {
+            let requestData = {
+                useremail: this.email,
+                password: this.password
             };
 
-            fetch('/CooperativeEditor/login', options).then(async res => {
-                let data = await res.json();
-
-                if (res.ok && data.isLoginValid) {
+            api.doPost('/CooperativeEditor/login', requestData, (data) => { 
+                if (data.isLoginValid) {
                     //TODO:
                     //Validate new user (including email, allowed password, and correct password confirmation
 
@@ -74,8 +70,6 @@ export default {
                     //Display an error message on the text fields
                     alert('Error: invalid user.');
                 }
-            }).catch(error => {
-                //TODO: handle network errors
             });
         }
     }
