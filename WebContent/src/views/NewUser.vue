@@ -51,7 +51,7 @@ export default {
         }
     },
     methods: {
-        createUser: function() {
+        createUser() {
             let requestData = {
                 name: this.newUserName,
                 email: this.newUserEmail,

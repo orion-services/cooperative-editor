@@ -92,11 +92,11 @@ export default {
         },
     },
     methods: {
-        saveActivity: function() {
+        saveActivity() {
             this.requestSaveProduction();
         },
 
-        onChangeParticipants: function() {
+        onChangeParticipants() {
             //TODO:
             //Allow participants to be removed
             //Prevent repetition of user production configuration items
@@ -116,10 +116,10 @@ export default {
             }
         },
 
-        requestRubricProductionConfiguration: function() {
+        requestRubricProductionConfiguration() {
         },
 
-        requestUserProductionConfiguration: function(userId) {
+        requestUserProductionConfiguration(userId) {
             let requestData = {
 	        production: { id: this.production.id },
 	        user: { id: userId },
@@ -148,16 +148,16 @@ export default {
 
         },
 
-        requestDisconnectRubric: function() {
+        requestDisconnectRubric() {
         },
 
-        requestGetProduction: function() {
+        requestGetProduction() {
         },
 
-        requestDisconnectUserProductionConfiguration: function() {
+        requestDisconnectUserProductionConfiguration() {
         },
 
-        requestPartialSubmitProduction: function() {
+        requestPartialSubmitProduction() {
             this.production.participatInProduction = false; //XXX: typo
             this.production.rubricProductionConfigurations = [];
             this.production.userProductionConfigurations = [];
@@ -177,7 +177,7 @@ export default {
             });
         },
 
-        requestPeopleSuggestion: function(partialName) {
+        requestPeopleSuggestion(partialName) {
             api.doGet('/CooperativeEditor/webservice/form/peoplesuggestion/' + partialName, (data) => {
                 this.participantsItems = data;
 
@@ -187,7 +187,7 @@ export default {
             });
         },
 
-        requestSaveProduction: function() {
+        requestSaveProduction() {
             this.production.participatInProduction = false; //XXX: typo
             this.production.rubricProductionConfigurations = [];
             this.production.userProductionConfigurations = [];
