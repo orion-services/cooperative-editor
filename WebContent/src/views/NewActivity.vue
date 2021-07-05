@@ -65,12 +65,20 @@ import api from '../api.js';
 export default {
     name: "NewActivity",
     data() {
+        let now = new Date(Date.now());
+
+        let year = String(now.getFullYear()).padStart(4, '0');
+        let month = String(now.getMonth() + 1).padStart(2, '0');
+        let day = String(now.getDate()).padStart(2, '0');
+        let hour = String(now.getHours()).padStart(2, '0');
+        let minute = String(now.getMinutes()).padStart(2, '0');
+
         return {
             goal: '',
             minRounds: 1,
             maxRounds: 1,
-            startDate: '',
-            startTime: '',
+            startDate: year + '-' + month + '-' + day,
+            startTime: hour + ':' + minute,
             participantsSearch: '',
             participantsItems: [],
             participantsValues: [],
@@ -116,6 +124,16 @@ export default {
             }
         },
 
+        convertDate() {
+            let year = parseInt(this.startDate.substring(0, 4), 10);
+            let month = parseInt(this.startDate.substring(5, 7), 10) - 1;
+            let day = parseInt(this.startDate.substring(8, 10), 10);
+            let hour = parseInt(this.startTime.substring(0, 2), 10);
+            let minute = parseInt(this.startTime.substring(3, 5), 10);
+
+            return (new Date(year, month, day, hour, minute)).getTime();
+        },
+
         requestRubricProductionConfiguration() {
         },
 
@@ -138,7 +156,7 @@ export default {
                 if (index == -1) {
                     this.production.userProductionConfigurations.push(data);
                 } else {
-                    //Replace
+                    this.production.userProductionConfigurations.splice(index, 1, data);
                 }
 
                 //TODO:
@@ -161,7 +179,7 @@ export default {
             this.production.participatInProduction = false; //XXX: typo
             this.production.rubricProductionConfigurations = [];
             this.production.userProductionConfigurations = [];
-            this.production.startOfProduction = 0; //TODO: correct time and date
+            this.production.startOfProduction = this.convertDate();
             this.production.objective = this.goal;
             this.production.minimumTickets = this.minRounds;
             this.production.limitTickets = this.maxRounds;
@@ -191,7 +209,7 @@ export default {
             this.production.participatInProduction = false; //XXX: typo
             this.production.rubricProductionConfigurations = [];
             this.production.userProductionConfigurations = [];
-            this.production.startOfProduction = 0; //TODO: correct time and date
+            this.production.startOfProduction = this.convertDate();
             this.production.objective = this.goal;
             this.production.minimumTickets = this.minRounds;
             this.production.limitTickets = this.maxRounds;
