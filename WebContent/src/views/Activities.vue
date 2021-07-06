@@ -56,11 +56,13 @@ export default {
         }
     },
     created() { 
-        api.doGet('/CooperativeEditor/webservice/list/productionList', (data) => {
-            this.activities = data;
+        api.doGet('/CooperativeEditor/webservice/list/productionList', (ok, status, data, error) => {
+            if (ok) {
+                this.activities = data;
+            } else {
+                //TODO: handle errors
+            }
         });
-
-        //TODO: handle errors
     },
     methods: {
     }

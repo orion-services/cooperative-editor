@@ -18,19 +18,20 @@ new Vue({
     //Start the app by performing an API request to check if the user is
     //logged in
 
-    api.doPost('/CooperativeEditor/login', { checkLogin: true }, (data) => {
-      this.loginChecked = true;
-      this.isLoggedIn = data.isLoggedIn;
+    //TODO: handle errors
+    api.doPost('/CooperativeEditor/login', { checkLogin: true }, (ok, status, data, error) => {
+      if (ok) {
+        this.loginChecked = true;
+        this.isLoggedIn = data.isLoggedIn;
 
-      //If the user is not logged in, redirect to /login
-      if (!this.isLoggedIn) {
-        router.push('/login');
-      } else {
-        router.push('/');
+        //If the user is not logged in, redirect to /login
+        if (!this.isLoggedIn) {
+          router.push('/login');
+        } else {
+          router.push('/');
+        }
       }
     });
-
-    //TODO: handle errors
   }
 }).$mount('#app')
 

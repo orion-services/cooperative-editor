@@ -1,4 +1,5 @@
-function doRequest(url, method, body, okFunc) {
+//"onComplete" is a function with the arguments: (ok, status, data, error)
+function doRequest(url, method, body, onComplete) {
   let options = {
     method: method,
     headers: { 'Content-Type': 'application/json; charset=UTF-8' },
@@ -10,34 +11,27 @@ function doRequest(url, method, body, okFunc) {
 
   fetch(url, options).then(async res => {
     let data = await res.json();
-
-    if (res.ok) {
-      okFunc(data);
-    } else {
-      //TODO: better error handling
-      alert('Error (status code: ' + res.status + ').');
-    }
+    onComplete(res.ok, res.status, data, null);
   }).catch(error => {
-    //TODO: better network error handling
-    alert('Network error.');
+    onComplete(false, null, null, error);
   });
 }
 
 export default {
-  doGet(url, okFunc) {
-    doRequest(url, 'GET', null, okFunc);
+  doGet(url, onComplete) {
+    doRequest(url, 'GET', null, onComplete);
   },
 
-  doPost(url, body, okFunc) {
-    doRequest(url, 'POST', body, okFunc);
+  doPost(url, body, onComplete) {
+    doRequest(url, 'POST', body, onComplete);
   },
 
-  doPut(url, body, okFunc) {
-    doRequest(url, 'PUT', body, okFunc);
+  doPut(url, body, onComplete) {
+    doRequest(url, 'PUT', body, onComplete);
   },
 
-  doDelete(url, body, okFunc) {
-    doRequest(url, 'DELETE', body, okFunc);
+  doDelete(url, body, onComplete) {
+    doRequest(url, 'DELETE', body, onComplete);
   },
 };
 

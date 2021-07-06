@@ -155,7 +155,12 @@ export default {
 	        user: { id: userId },
             }
 
-            api.doPost('/CooperativeEditor/webservice/form/userProductionConfiguration', requestData, (data) => {
+            api.doPost('/CooperativeEditor/webservice/form/userProductionConfiguration', requestData, (ok, status, data, error) => {
+                if (!ok) {
+                    //TODO: handle errors
+                    return;
+                }
+
                 let index = -1;
 
                 for (let i in this.production.userProductionConfigurations) {
@@ -170,10 +175,6 @@ export default {
                 } else {
                     this.production.userProductionConfigurations.splice(index, 1, data);
                 }
-
-                //TODO:
-                //Check status code (404, 500, ...)
-                //Display an error message on the text fields
             });
 
         },
@@ -196,24 +197,26 @@ export default {
             this.production.minimumTickets = this.minRounds;
             this.production.limitTickets = this.maxRounds;
 
-            api.doPost('/CooperativeEditor/webservice/form/partialSubmit', this.production, (data) => {
+            api.doPost('/CooperativeEditor/webservice/form/partialSubmit', this.production, (ok, status, data, error) => {
+                if (!ok) {
+                    //TODO: handle errors
+                    return;
+                }
+
                 if (data.id != this.production.id) {
                     this.production.id = data.id;
                 }
-
-                //TODO:
-                //Check status code (404, 500, ...)
-                //Display an error message on the text fields
             });
         },
 
         requestPeopleSuggestion(partialName) {
-            api.doGet('/CooperativeEditor/webservice/form/peoplesuggestion/' + partialName, (data) => {
-                this.participantsItems = data;
+            api.doGet('/CooperativeEditor/webservice/form/peoplesuggestion/' + partialName, (ok, status, data, error) => {
+                if (!ok) {
+                    //TODO: handle errors
+                    return;
+                }
 
-                //TODO:
-                //Check status code (404, 500, ...)
-                //Display an error message on the text fields
+                this.participantsItems = data;
             });
         },
 
@@ -227,15 +230,13 @@ export default {
             this.production.limitTickets = this.maxRounds;
 
             //TODO: validate entered data
-            api.doPost('/CooperativeEditor/webservice/form/saveProduction', this.production, (data) => {
-                if (data.isProductionValid) {
+            api.doPost('/CooperativeEditor/webservice/form/saveProduction', this.production, (ok, status, data, error) => {
+                if (ok && data.isProductionValid) {
                     //TODO: Redirect to the new production URL
                     this.$router.push('/activities');
+                } else {
+                    //TODO: handle errors
                 }
-
-                //TODO:
-                //Check status code (404, 500, ...)
-                //Display an error message on the text fields
             });
         },
     }

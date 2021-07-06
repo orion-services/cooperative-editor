@@ -58,8 +58,8 @@ export default {
                 password: this.newUserPassword
             };
 
-            api.doPut('/CooperativeEditor/login', requestData, (data) => {
-               if (data.isUserValid) {
+            api.doPut('/CooperativeEditor/login', requestData, (ok, status, data, error) => {
+               if (ok && data.isUserValid) {
                     //TODO:
                     //Validate new user (including email, allowed password, and correct password confirmation
                     //Display a toast (or similar) instead of an alert
