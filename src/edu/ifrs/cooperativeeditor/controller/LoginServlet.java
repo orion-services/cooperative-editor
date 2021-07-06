@@ -36,7 +36,7 @@ import com.google.gson.JsonParser;
 import edu.ifrs.cooperativeeditor.dao.DataObject;
 import edu.ifrs.cooperativeeditor.model.User;
 
-@WebServlet("/login")
+@WebServlet("/login-api")
 public class LoginServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;

@@ -19,7 +19,7 @@ new Vue({
     //logged in
 
     //TODO: handle errors
-    api.doPost('/CooperativeEditor/login', { checkLogin: true }, (ok, status, data, error) => {
+    api.doPost('/CooperativeEditor/login-api', { checkLogin: true }, (ok, status, data, error) => {
       if (ok) {
         this.loginChecked = true;
         this.isLoggedIn = data.isLoggedIn;

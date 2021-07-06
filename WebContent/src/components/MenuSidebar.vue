@@ -121,7 +121,7 @@ export default {
     name: "MenuSidebar",
     methods: {
         logout() {
-            api.doGet('/CooperativeEditor/login', (ok, status, data, error) => {
+            api.doGet('/CooperativeEditor/login-api', (ok, status, data, error) => {
                 if (ok && data.isLogoutValid) {
                     this.$root.isLoggedIn = false;
                     this.$router.push('/login');

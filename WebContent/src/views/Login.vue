@@ -56,7 +56,7 @@ export default {
                 password: this.password
             };
 
-            api.doPost('/CooperativeEditor/login', requestData, (ok, status, data, error) => { 
+            api.doPost('/CooperativeEditor/login-api', requestData, (ok, status, data, error) => { 
                 if (ok && data.isLoginValid) {
                     //TODO:
                     //Validate new user (including email, allowed password, and correct password confirmation
