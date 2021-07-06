@@ -9,18 +9,26 @@
                                     <v-text-field v-model="goal" label="Objetivo" color="primary"></v-text-field>
                                 </v-col>
                                 <v-col cols="12">
-                                    <v-text-field v-model="minRounds" label="Mínimo de rodadas" color="primary"></v-text-field>
+                                    <v-text-field type="number" min="1" v-model="minRounds" label="Mínimo de rodadas" color="primary"></v-text-field>
                                 </v-col>
                                 <v-col cols="12">
-                                    <v-text-field v-model="maxRounds" label="Máximo de rodadas" color="primary"></v-text-field>
+                                    <v-text-field type="number" min="1" v-model="maxRounds" label="Máximo de rodadas" color="primary"></v-text-field>
                                 </v-col>
                                 <v-col cols="12">
-                                    <!-- Data de início -->
-                                    <v-date-picker v-model="startDate" color="primary"></v-date-picker>
+                                    <v-menu v-model="showStartDatePicker" :close-on-content-click="false" offset-y min-width="auto">
+                                        <template v-slot:activator="{ on, attrs }">
+                                            <v-text-field v-model="startDate" label="Data de início" readonly v-bind="attrs" v-on="on" color="primary"></v-text-field>
+                                        </template>
+                                        <v-date-picker v-model="startDate" color="primary" @input="showStartDatePicker = false"></v-date-picker>
+                                    </v-menu>
                                 </v-col>
                                 <v-col cols="12">
-                                    <!-- Horário de início -->
-                                    <v-time-picker v-model="startTime" color="primary"></v-text-field>
+                                    <v-menu v-model="showStartTimePicker" :close-on-content-click="false" offset-y min-width="auto">
+                                        <template v-slot:activator="{ on, attrs }">
+                                            <v-text-field v-model="startTime" label="Horário de início" readonly v-bind="attrs" v-on="on" color="primary"></v-text-field>
+                                        </template>
+                                        <v-time-picker v-model="startTime" color="primary" @input="showStartTimePicker = false"></v-date-picker>
+                                    </v-menu>
                                 </v-col>
                                 <v-col cols="12">
                                     <v-autocomplete
@@ -79,6 +87,8 @@ export default {
             maxRounds: 1,
             startDate: year + '-' + month + '-' + day,
             startTime: hour + ':' + minute,
+            showStartDatePicker: false,
+            showStartTimePicker: false,
             participantsSearch: '',
             participantsItems: [],
             participantsValues: [],
@@ -124,6 +134,8 @@ export default {
             }
         },
 
+        //This method converts date and time strings to the number of
+        //milliseconds since January 1, 1970
         convertDate() {
             let year = parseInt(this.startDate.substring(0, 4), 10);
             let month = parseInt(this.startDate.substring(5, 7), 10) - 1;
