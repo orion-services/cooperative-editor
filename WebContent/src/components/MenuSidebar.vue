@@ -23,7 +23,7 @@
                         <v-icon>mdi-format-list-checks</v-icon>
                     </v-list-item-icon>
 
-                    <v-list-item-content>
+                    <v-list-item-content @click="$router.push('/activities')">
                         <v-list-item-title>Atividades</v-list-item-title>
                     </v-list-item-content>
                     </v-list-item>
@@ -75,7 +75,7 @@
             scroll-threshold="500"
             class="darkbg"
             >
-            <v-btn :active-class="$vuetify.theme.dark ? 'primary--text darkbg' : 'primary--text white'">
+            <v-btn @click="$router.push('/activities')" :active-class="$vuetify.theme.dark ? 'primary--text darkbg' : 'primary--text white'">
                 <v-row no-gutters>
                     <v-col cols="12" class="text-center">
                         <v-icon>mdi-format-list-checks</v-icon>
