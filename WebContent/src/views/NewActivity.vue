@@ -9,10 +9,10 @@
                                     <v-text-field v-model="goal" label="Objetivo" color="primary"></v-text-field>
                                 </v-col>
                                 <v-col cols="12">
-                                    <v-text-field type="number" min="1" v-model="minRounds" label="Mínimo de rodadas" color="primary"></v-text-field>
+                                    <v-text-field type="number" min="1" v-model="minRounds" label="Mínimo de rodadas" @blur="onMinRoundsBlur()" color="primary"></v-text-field>
                                 </v-col>
                                 <v-col cols="12">
-                                    <v-text-field type="number" min="1" v-model="maxRounds" label="Máximo de rodadas" color="primary"></v-text-field>
+                                    <v-text-field type="number" min="1" v-model="maxRounds" label="Máximo de rodadas" @blur="onMaxRoundsBlur()" color="primary"></v-text-field>
                                 </v-col>
                                 <v-col cols="12">
                                     <v-menu v-model="showStartDatePicker" :close-on-content-click="false" offset-y min-width="auto">
@@ -133,6 +133,34 @@ export default {
                 this.requestUserProductionConfiguration(this.participantsItems[i].id);
             }
         },
+
+        onMinRoundsBlur() {
+            if (!this.minRounds) {
+                this.minRounds = 1;
+            }
+
+            this.minRounds = parseInt(this.minRounds, 10);
+
+            if (this.minRounds < 1) {
+                this.minRounds = 1;
+            }
+
+            if (this.maxRounds < this.minRounds) {
+                this.maxRounds = this.minRounds;
+            }
+        },
+
+        onMaxRoundsBlur() {
+            if (!this.maxRounds) {
+                this.maxRounds = 1;
+            }
+            this.maxRounds = parseInt(this.maxRounds, 10);
+
+            if (this.maxRounds < this.minRounds) {
+                this.maxRounds = this.minRounds;
+            }
+        },
+
 
         //This method converts date and time strings to the number of
         //milliseconds since January 1, 1970
