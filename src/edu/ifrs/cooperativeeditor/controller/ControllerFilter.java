@@ -42,13 +42,15 @@ import edu.ifrs.cooperativeeditor.webservice.FormWebService;
  * 
  * @author Lauro Correa Junior
  */
-@WebFilter(urlPatterns = { "/private/*", "/editor/*", "/webresources/*", "/chat/*","/src/*" })
+//////@WebFilter(urlPatterns = { "/private/*", "/editor/*", "/webresources/*", "/chat/*","/src/*" })
+@WebFilter(urlPatterns = { "/login", "/new-user", "/activities", "/activities/new", "/activities/view", "/new-activity" })
 public class ControllerFilter implements Filter {
 	
 	private static final Logger log = Logger.getLogger(FormWebService.class.getName());
 
-	private static final Set<String> ALLOWED_PATHS = Collections
-			.unmodifiableSet(new HashSet<String>(Arrays.asList("/src/ce-login/ce-login.html","/src/ce-login/ce-login-localization.html")));
+	private static final Set<String> ALLOWED_PATHS = Collections.unmodifiableSet(new HashSet<String>(Arrays.asList(
+		"/login", "/new-user", "/activities", "/activities/new", "/activities/view", "/new-activity"
+	)));
 
 	/**
 	 * @see Filter#destroy()
@@ -70,15 +72,21 @@ public class ControllerFilter implements Filter {
 
 		boolean loggedIn = session.getAttribute("userId") != null;
 		boolean allowedPath = ALLOWED_PATHS.contains(path);
-		
+
+		if (allowedPath) {
+			request.getServletContext().getRequestDispatcher("/").forward(request, response);
+		} else {
+			chain.doFilter(req, res);
+		}
+
+		/*
 		if (loggedIn || allowedPath) {
 			chain.doFilter(req, res);
 		} else {
-			chain.doFilter(req, res);
-			//XXX
-			//session.setAttribute("urlBeforeRedirect", request.getRequestURL());
-			//response.sendRedirect(request.getContextPath() + "/login.html");
+			session.setAttribute("urlBeforeRedirect", request.getRequestURL());
+			response.sendRedirect(request.getContextPath() + "/login.html");
 		}
+		*/
 	}
 
 	@Override
