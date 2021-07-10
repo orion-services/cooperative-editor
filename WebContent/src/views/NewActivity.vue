@@ -6,13 +6,13 @@
                         <v-card-text class="py-10">
                             <v-row class="px-2 mt-5">
                                 <v-col cols="12">
-                                    <v-text-field v-model="goal" label="Objetivo" color="primary"></v-text-field>
+                                    <v-text-field v-model="goal" label="Objetivo" color="primary" @blur="onGoalBlur()" :error-messages="errors.goal"></v-text-field>
                                 </v-col>
                                 <v-col cols="12">
-                                    <v-text-field type="number" min="1" v-model="minRounds" label="Mínimo de rodadas" @blur="onMinRoundsBlur()" color="primary"></v-text-field>
+                                    <v-text-field type="number" min="1" v-model="minRounds" label="Mínimo de rodadas" @blur="onMinMaxRoundsBlur()" color="primary"></v-text-field>
                                 </v-col>
                                 <v-col cols="12">
-                                    <v-text-field type="number" min="1" v-model="maxRounds" label="Máximo de rodadas" @blur="onMaxRoundsBlur()" color="primary"></v-text-field>
+                                    <v-text-field type="number" min="1" v-model="maxRounds" label="Máximo de rodadas" @blur="onMinMaxRoundsBlur()" color="primary"></v-text-field>
                                 </v-col>
                                 <v-col cols="12">
                                     <v-menu v-model="showStartDatePicker" :close-on-content-click="false" offset-y min-width="auto">
@@ -35,14 +35,15 @@
                                         chips
                                         deletable-chips
                                         multiple
-                                        hide-details
                                         hide-no-data
                                         :items="participantsItems"
                                         item-text="name"
                                         item-value="id"
                                         v-model="participantsValues"
                                         :search-input.sync="participantsSearch"
-                                        v-on:change="onChangeParticipants();"
+                                        :error-messages="errors.participants"
+                                        @blur="onParticipantsBlur()"
+                                        @change="onChangeParticipants()"
                                         label="Participantes"
                                         color="primary"
                                     ></v-text-field>
@@ -60,15 +61,13 @@
                     </v-card>
                 </v-col>
             </v-row>
-            <!-- <div style="height: 500px; overflow: hidden;" ><svg viewBox="0 0 500 150" preserveAspectRatio="none" style="height: 100%; width: 100%;"><path d="M0.00,49.98 C149.99,250.00 349.20,-109.98 500.00,49.98 L500.00,250.00 L0.00,150.00 Z" style="stroke: none; fill: #EBEBEB;opacity:0.25"></path></svg></div>
-            <div style="height: 350px; overflow: hidden;margin-top: -350px" ><svg viewBox="0 0 500 150" preserveAspectRatio="none" style="height: 100%; width: 100%;"><path d="M0.00,49.98 C149.99,250.00 349.20,-109.98 500.00,49.98 L500.00,250.00 L0.00,150.00 Z" style="stroke: none; fill: #EBEBEB;opacity:0.5"></path></svg></div>
-            <div style="height: 250px; overflow: hidden;margin-top:-190px" ><svg viewBox="0 0 500 150" preserveAspectRatio="none" style="height: 100%; width: 100%;"><path d="M0.00,49.98 C149.99,250.00 349.20,-109.98 500.00,49.98 L500.00,250.00 L0.00,150.00 Z" style="stroke: none; fill: #E8E8E8;"></path></svg></div>
-         -->
     </div>
 </template>
 
 <script>
 import api from '../api.js';
+
+const API_URL = '/CooperativeEditor/webservice/form/';
 
 export default {
     name: "NewActivity",
@@ -94,6 +93,10 @@ export default {
             participantsValues: [],
             evaluationCriteria: '',
             production: {},
+            errors: {
+                goal: '',
+                participants: '',
+            },
         }
     },
     watch: {
@@ -134,7 +137,13 @@ export default {
             }
         },
 
-        onMinRoundsBlur() {
+        onGoalBlur() {
+            if (this.goal.length > 0) {
+                this.errors.goal = '';
+            }
+        },
+
+        onMinMaxRoundsBlur() {
             if (!this.minRounds) {
                 this.minRounds = 1;
             }
@@ -145,15 +154,10 @@ export default {
                 this.minRounds = 1;
             }
 
-            if (this.maxRounds < this.minRounds) {
-                this.maxRounds = this.minRounds;
-            }
-        },
-
-        onMaxRoundsBlur() {
             if (!this.maxRounds) {
                 this.maxRounds = 1;
             }
+
             this.maxRounds = parseInt(this.maxRounds, 10);
 
             if (this.maxRounds < this.minRounds) {
@@ -161,6 +165,11 @@ export default {
             }
         },
 
+        onParticipantsBlur() {
+            if (this.participantsValues.length > 0) {
+                this.errors.participants = '';
+            }
+        },
 
         //This method converts date and time strings to the number of
         //milliseconds since January 1, 1970
@@ -183,7 +192,7 @@ export default {
 	        user: { id: userId },
             }
 
-            api.doPost('/CooperativeEditor/webservice/form/userProductionConfiguration', requestData, (ok, status, data, error) => {
+            api.doPost(API_URL + 'userProductionConfiguration', requestData, (ok, status, data, error) => {
                 if (!ok) {
                     //TODO: handle errors
                     return;
@@ -225,7 +234,7 @@ export default {
             this.production.minimumTickets = this.minRounds;
             this.production.limitTickets = this.maxRounds;
 
-            api.doPost('/CooperativeEditor/webservice/form/partialSubmit', this.production, (ok, status, data, error) => {
+            api.doPost(API_URL + 'partialSubmit', this.production, (ok, status, data, error) => {
                 if (!ok) {
                     //TODO: handle errors
                     return;
@@ -238,7 +247,7 @@ export default {
         },
 
         requestPeopleSuggestion(partialName) {
-            api.doGet('/CooperativeEditor/webservice/form/peoplesuggestion/' + partialName, (ok, status, data, error) => {
+            api.doGet(API_URL + 'peoplesuggestion/' + partialName, (ok, status, data, error) => {
                 if (!ok) {
                     //TODO: handle errors
                     return;
@@ -257,8 +266,20 @@ export default {
             this.production.minimumTickets = this.minRounds;
             this.production.limitTickets = this.maxRounds;
 
+            if (this.goal.length == 0) {
+                this.errors.goal = 'Campo de preenchimento obrigatório';
+                return;
+            }
+            this.errors.goal = '';
+
+            if (this.participantsValues.length == 0) {
+                this.errors.participants = 'Ao menos um participante deve ser selecionado';
+                return;
+            }
+            this.errors.participants = '';
+
             //TODO: validate entered data
-            api.doPost('/CooperativeEditor/webservice/form/saveProduction', this.production, (ok, status, data, error) => {
+            api.doPost(API_URL + 'saveProduction', this.production, (ok, status, data, error) => {
                 if (ok && data.isProductionValid) {
                     //TODO: Redirect to the new production URL
                     this.$router.push('/activities');
