@@ -18,32 +18,34 @@
 
             <v-list class="mt-10">
                 <v-list-item-group>
-                    <v-list-item link>
-                    <v-list-item-icon>
-                        <v-icon>mdi-format-list-checks</v-icon>
-                    </v-list-item-icon>
+                    <v-list-item link @click="$router.push('/activities')">
+                        <v-list-item-icon>
+                            <v-icon>mdi-format-list-checks</v-icon>
+                        </v-list-item-icon>
 
-                    <v-list-item-content @click="$router.push('/activities')">
-                        <v-list-item-title>Atividades</v-list-item-title>
-                    </v-list-item-content>
+                        <v-list-item-content >
+                            <v-list-item-title>Atividades</v-list-item-title>
+                        </v-list-item-content>
                     </v-list-item>
-                    <v-list-item link>
-                    <v-list-item-icon>
-                        <v-icon>mdi-account</v-icon>
-                    </v-list-item-icon>
 
-                    <v-list-item-content>
-                        <v-list-item-title>Perfil</v-list-item-title>
-                    </v-list-item-content>
+                    <v-list-item link>
+                        <v-list-item-icon>
+                            <v-icon>mdi-account</v-icon>
+                        </v-list-item-icon>
+
+                        <v-list-item-content>
+                            <v-list-item-title>Perfil</v-list-item-title>
+                        </v-list-item-content>
                     </v-list-item>
-                    <v-list-item link>
-                    <v-list-item-icon>
-                        <v-icon>mdi-cog</v-icon>
-                    </v-list-item-icon>
 
-                    <v-list-item-content>
-                        <v-list-item-title>Configurações</v-list-item-title>
-                    </v-list-item-content>
+                    <v-list-item link>
+                        <v-list-item-icon>
+                            <v-icon>mdi-cog</v-icon>
+                        </v-list-item-icon>
+
+                        <v-list-item-content>
+                            <v-list-item-title>Configurações</v-list-item-title>
+                        </v-list-item-content>
                     </v-list-item>
                 </v-list-item-group>
             </v-list>
