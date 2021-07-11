@@ -281,8 +281,7 @@ export default {
             //TODO: validate entered data
             api.doPost(API_URL + 'saveProduction', this.production, (ok, status, data, error) => {
                 if (ok && data.isProductionValid) {
-                    //TODO: Redirect to the new production URL
-                    this.$router.push('/activities');
+                    this.$router.push('/activities/' + data.url);
                 } else {
                     //TODO: handle errors
                 }

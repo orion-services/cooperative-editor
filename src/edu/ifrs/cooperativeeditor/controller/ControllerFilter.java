@@ -42,14 +42,13 @@ import edu.ifrs.cooperativeeditor.webservice.FormWebService;
  * 
  * @author Lauro Correa Junior
  */
-//////@WebFilter(urlPatterns = { "/private/*", "/editor/*", "/webresources/*", "/chat/*","/src/*" })
-@WebFilter(urlPatterns = { "/login", "/new-user", "/activities", "/activities/new", "/activities/view", "/new-activity" })
+@WebFilter(urlPatterns = { "/login", "/new-user", "/activities", "/activities/*" })
 public class ControllerFilter implements Filter {
 	
 	private static final Logger log = Logger.getLogger(FormWebService.class.getName());
 
 	private static final Set<String> ALLOWED_PATHS = Collections.unmodifiableSet(new HashSet<String>(Arrays.asList(
-		"/login", "/new-user", "/activities", "/activities/new", "/activities/view", "/new-activity"
+		"/login", "/new-user", "/activities", "/activities/*"
 	)));
 
 	/**
@@ -72,6 +71,10 @@ public class ControllerFilter implements Filter {
 
 		boolean loggedIn = session.getAttribute("userId") != null;
 		boolean allowedPath = ALLOWED_PATHS.contains(path);
+
+		if (path.startsWith("/activities/")) {
+			allowedPath = true;
+		}
 
 		if (allowedPath) {
 			request.getServletContext().getRequestDispatcher("/").forward(request, response);

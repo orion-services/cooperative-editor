@@ -8,7 +8,7 @@
 
             <v-row class="mt-10 mb-15 pb-5">
                 <v-col cols="12" sm="6" md="4" :key="i">
-                    <v-card v-for="activity in activities" class="darkbg card-radius" flat @click="$router.push('/activities/view')">
+                    <v-card v-for="activity in activities" class="darkbg card-radius" flat @click="openActivity(activity.url)">
                         <v-card-text>
                             <v-row align="center" justify="center">
                                 <v-col cols="10">
@@ -42,17 +42,7 @@ export default {
     name: "Activities",
     data() {
         return {
-            activities: [
-                //XXX: test data
-
-                /*
-                { id: 1, objective: "Atividade 1", url: "" },
-                { id: 2, objective: "Atividade 2", url: "" },
-                { id: 3, objective: "Atividade 3", url: "" },
-                { id: 4, objective: "Atividade 4", url: "" },
-                { id: 5, objective: "Atividade 5", url: "" },
-                */
-            ],
+            activities: [],
         }
     },
     created() { 
@@ -65,6 +55,9 @@ export default {
         });
     },
     methods: {
+        openActivity(url) {
+            this.$router.push('/activities/' + url);
+        },
     }
 }
 </script>

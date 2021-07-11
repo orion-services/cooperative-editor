@@ -38,15 +38,16 @@ const routes = [
         component: Activities
       },
       {
-        path: "activities/view",
-        name: "View Activity",
-        component: ViewActivity
-      },
-      {
         path: "activities/new",
         name: "New Activity",
         component: NewActivity
-      }
+      },
+      {
+        path: "activities/:url",
+        name: "View Activity",
+        component: ViewActivity
+      },
+
     ]
   },
   {
