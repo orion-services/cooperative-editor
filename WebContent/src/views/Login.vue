@@ -13,10 +13,10 @@
                             </v-row>
                             <v-row class="px-2 mt-5">
                                 <v-col cols="12">
-                                    <v-text-field label="E-mail" color="primary" v-model="email"></v-text-field>
+                                    <v-text-field label="E-mail" color="primary" v-model="email" :error-messages="errors.email" @blur="onEmailBlur()"></v-text-field>
                                 </v-col>
                                 <v-col cols="12">
-                                    <v-text-field label="Senha" color="primary" v-model="password" type="password"></v-text-field>
+                                    <v-text-field label="Senha" color="primary" v-model="password" type="password" :error-messages="errors.password" @blur="onPasswordBlur()"></v-text-field>
                                 </v-col>
                             </v-row>
                             <v-row class="px-3">
@@ -46,32 +46,60 @@ export default {
     data() {
         return {
             email: '',
-            password: ''
+            password: '',
+            errors: {
+                email: '',
+                password: '',
+            },
         }
     },
     methods: {
         login() {
+            if (this.email.length == 0) {
+                this.errors.email = 'Campo de preenchimento obrigatório';
+                return;
+            }
+            this.errors.email = '';
+
+            if (this.password.length == 0) {
+                this.errors.password = 'Campo de preenchimento obrigatório';
+                return;
+            }
+            this.errors.password = '';
+
             let requestData = {
                 useremail: this.email,
                 password: this.password
             };
 
             api.doPost('/CooperativeEditor/login-api', requestData, (ok, status, data, error) => { 
-                if (ok && data.isLoginValid) {
-                    //TODO:
-                    //Validate new user (including email, allowed password, and correct password confirmation
-
-                    this.$root.isLoggedIn = true;
-                    this.$router.push('/');
+                if (ok) {
+                    if (data.isLoginValid) {
+                        this.$root.isLoggedIn = true;
+                        this.$router.push('/');
+                    } else {
+                        this.errors.email = this.errors.password = 'Usuário ou senha incorreto';
+                    }
                 } else {
                     //TODO:
                     //check status code (404, 500, ...)
-                    //Display a toast (or similar)
-                    //Display an error message on the text fields
+                    //Display a snackbar
                     alert('Error: invalid user.');
                 }
             });
-        }
+        },
+
+        onEmailBlur() {
+            if (this.email.length > 0) {
+                this.errors.email = '';
+            }
+        },
+
+        onPasswordBlur() {
+            if (this.password.length > 0) {
+                this.errors.password = '';
+            }
+        },
     }
 }
 </script>

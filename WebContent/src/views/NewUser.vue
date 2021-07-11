@@ -6,16 +6,16 @@
                         <v-card-text class="py-10">
                             <v-row class="px-2 mt-5">
                                 <v-col cols="12">
-                                    <v-text-field v-model="newUserName" label="Nome" color="primary"></v-text-field>
+                                    <v-text-field v-model="name" label="Nome" color="primary" :error-messages="errors.name" @blur="onNameBlur()"></v-text-field>
                                 </v-col>
                                 <v-col cols="12">
-                                    <v-text-field v-model="newUserEmail" label="E-mail" color="primary"></v-text-field>
+                                    <v-text-field v-model="email" label="E-mail" color="primary" :error-messages="errors.email" @blur="onEmailBlur()"></v-text-field>
                                 </v-col>
                                 <v-col cols="12">
-                                    <v-text-field v-model="newUserPassword" label="Senha" color="primary" type="password"></v-text-field>
+                                    <v-text-field v-model="password" label="Senha" color="primary" type="password" :error-messages="errors.password" @blur="onPasswordBlur()"></v-text-field>
                                 </v-col>
                                 <v-col cols="12">
-                                    <v-text-field v-model="newUserPasswordConfirm" label="Senha (confirmação)" color="primary" type="password"></v-text-field>
+                                    <v-text-field v-model="passwordConfirm" label="Senha (confirmação)" color="primary" type="password" :error-messages="errors.passwordConfirm" @blur="onPasswordConfirmBlur()"></v-text-field>
                                 </v-col>
                             </v-row>
                             <v-row class="px-3">
@@ -30,10 +30,6 @@
                     </v-card>
                 </v-col>
             </v-row>
-            <!-- <div style="height: 500px; overflow: hidden;" ><svg viewBox="0 0 500 150" preserveAspectRatio="none" style="height: 100%; width: 100%;"><path d="M0.00,49.98 C149.99,250.00 349.20,-109.98 500.00,49.98 L500.00,250.00 L0.00,150.00 Z" style="stroke: none; fill: #EBEBEB;opacity:0.25"></path></svg></div>
-            <div style="height: 350px; overflow: hidden;margin-top: -350px" ><svg viewBox="0 0 500 150" preserveAspectRatio="none" style="height: 100%; width: 100%;"><path d="M0.00,49.98 C149.99,250.00 349.20,-109.98 500.00,49.98 L500.00,250.00 L0.00,150.00 Z" style="stroke: none; fill: #EBEBEB;opacity:0.5"></path></svg></div>
-            <div style="height: 250px; overflow: hidden;margin-top:-190px" ><svg viewBox="0 0 500 150" preserveAspectRatio="none" style="height: 100%; width: 100%;"><path d="M0.00,49.98 C149.99,250.00 349.20,-109.98 500.00,49.98 L500.00,250.00 L0.00,150.00 Z" style="stroke: none; fill: #E8E8E8;"></path></svg></div>
-         -->
     </div>
 </template>
 
@@ -44,18 +40,49 @@ export default {
     name: "NewUser",
     data() {
         return {
-            newUserName: '',
-            newUserEmail: '',
-            newUserPassword: '',
-            newUserPasswordConfirm: '',
+            name: '',
+            email: '',
+            password: '',
+            passwordConfirm: '',
+            errors: {
+                name: '',
+                email: '',
+                password: '',
+                passwordConfirm: '',
+            },
         }
     },
     methods: {
         createUser() {
+            if (this.name.length == 0) {
+                this.errors.name = 'Campo de preenchimento obrigatório';
+                return;
+            }
+            this.errors.name = '';
+
+            if (this.email.length == 0) {
+                //TODO: actually validate an email address
+                this.errors.email = 'Campo de preenchimento obrigatório';
+                return;
+            }
+            this.errors.email = '';
+
+            if (this.password.length < 4) {
+                this.errors.password = 'A senha deve conter pelo menos 4 caracteres';
+                return;
+            }
+            this.errors.password = '';
+
+            if (this.passwordConfirm != this.password) {
+                this.errors.passwordConfirm = 'As senhas não correspondem';
+                return;
+            }
+            this.errors.passwordConfirm = '';
+
             let requestData = {
-                name: this.newUserName,
-                email: this.newUserEmail,
-                password: this.newUserPassword
+                name: this.name,
+                email: this.email,
+                password: this.password
             };
 
             api.doPut('/CooperativeEditor/login-api', requestData, (ok, status, data, error) => {
@@ -72,7 +99,32 @@ export default {
                     alert('Error: unable to create the user.');
                 }
             });
-        }
+        },
+
+        onNameBlur() {
+            if (this.name.length > 0) {
+                this.errors.name = '';
+            }
+        },
+
+        onEmailBlur() {
+            if (this.email.length > 0) {
+                //TODO: actually validate an email address
+                this.errors.email = '';
+            }
+        },
+
+        onPasswordBlur() {
+            if (this.password.length >= 4) {
+                this.errors.password = '';
+            }
+        },
+
+        onPasswordConfirmBlur() {
+            if (this.passwordConfirm == this.password) {
+                this.errors.passwordConfirm = '';
+            }
+        },
     }
 }
 </script>
