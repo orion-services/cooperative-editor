@@ -139,23 +139,6 @@ export default {
             for (i in added) {
                 this.requestUserProductionConfiguration(added[i]);
             }
-
-
-/*
-            for (let i in this.participantsItems) {
-                if (!this.production.userProductionConfigurations) {
-                    break;
-                }
-
-                for (let j in this.production.userProductionConfigurations) {
-                    if (this.production.userProductionConfigurations[j].id == this.participantsItems[i]) {
-                        return;
-                    }
-                }
-
-                this.requestUserProductionConfiguration(this.participantsItems[i].id);
-            }
-*/
         },
 
         onGoalBlur() {
