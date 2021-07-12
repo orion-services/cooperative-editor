@@ -91,6 +91,7 @@ export default {
             participantsSearch: '',
             participantsItems: [],
             participantsValues: [],
+            participantsValuesOld: [],
             evaluationCriteria: '',
             production: {},
             errors: {
@@ -118,10 +119,29 @@ export default {
         },
 
         onChangeParticipants() {
-            //TODO:
-            //Allow participants to be removed
-            //Prevent repetition of user production configuration items
+            let removed = this.participantsValuesOld.filter(e => this.participantsValues.indexOf(e) === -1);
+            let added = this.participantsValues.filter(e => this.participantsValuesOld.indexOf(e) === -1);
+            let i;
 
+            //Clone array
+            this.participantsValuesOld = JSON.parse(JSON.stringify(this.participantsValues));
+
+            for (i in removed) {
+                let upcs = this.production.userProductionConfigurations;
+
+                for (let j in upcs) {
+                    if (upcs[j].user.id == removed[i]) {
+                        this.requestDisconnectUserProductionConfiguration(upcs[j].id);
+                    }
+                }
+            }
+
+            for (i in added) {
+                this.requestUserProductionConfiguration(added[i]);
+            }
+
+
+/*
             for (let i in this.participantsItems) {
                 if (!this.production.userProductionConfigurations) {
                     break;
@@ -135,6 +155,7 @@ export default {
 
                 this.requestUserProductionConfiguration(this.participantsItems[i].id);
             }
+*/
         },
 
         onGoalBlur() {
@@ -222,7 +243,24 @@ export default {
         requestGetProduction() {
         },
 
-        requestDisconnectUserProductionConfiguration() {
+        requestDisconnectUserProductionConfiguration(id) {
+            api.doDelete(API_URL + 'disconnectUserProductionConfiguration/' + id, null, (ok, status, data, error) => {
+                if (ok) {
+                    let upcs = this.production.userProductionConfigurations;
+                    let index = -1;
+
+                    for (let i in upcs) {
+                        if (upcs[i].id == id) {
+                            index = i;
+                            break;
+                        }
+                    }
+
+                    if (index > -1) {
+                        upcs.splice(index, 1);
+                    }
+                }
+            });
         },
 
         requestPartialSubmitProduction() {
@@ -278,7 +316,6 @@ export default {
             }
             this.errors.participants = '';
 
-            //TODO: validate entered data
             api.doPost(API_URL + 'saveProduction', this.production, (ok, status, data, error) => {
                 if (ok && data.isProductionValid) {
                     this.$router.push('/activities/' + data.url);
