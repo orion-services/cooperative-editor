@@ -6,7 +6,7 @@
             <v-row justify="center" :class="$vuetify.theme.dark ? 'black view-activity' : 'view-activity'">
                 <v-col cols="12" md="12">
                     <v-container class="mt-10">
-                        <span class="heading-4">
+                        <span class="heading-4" @click="leaveActivity()">
                             <router-link to="/activities" class="router-link primary--text heading-4">
                                 <v-icon size="40" color="primary">mdi-chevron-left</v-icon> Sair da atividade
                             </router-link>
@@ -14,7 +14,7 @@
 
                         <p class="heading-1 mt-10 primary--text">Editor</p>
 
-                        <v-textarea rows="10" class="mt-10" outlined placeholder="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry’s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic."></v-textarea>
+                        <v-textarea rows="10" class="mt-10" outlined placeholder="Lorem Ipsum."></v-textarea>
 
                         <v-card
                             flat
@@ -30,47 +30,14 @@
                                 mandatory
                                 class="darkbg"
                                 >
-                                    <v-btn x-large class="py-md-10 py-lg-12 px-lg-10 text-capitalize darkbg" :active-class="$vuetify.theme.dark ? 'greenBtn black--text' : 'greenBtn white--text'">
+                                    <v-btn v-for="user in onlineUsers" x-large class="py-md-10 py-lg-12 px-lg-10 text-capitalize darkbg" :active-class="$vuetify.theme.dark ? 'greenBtn black--text' : 'greenBtn white--text'">
                                         <v-row no-gutters>
                                             <v-col cols="12">
-                                                Pessoa A
+                                                {{ user.name }}
                                             </v-col>
                                             <v-col cols="12" class="pt-2">
                                                 <v-icon v-if="$vuetify.theme.dark" :color="active == 0 ? 'black' : 'red'">mdi-pencil</v-icon>
                                                 <v-icon v-else :color="active == 0 ? 'white' : 'red'">mdi-pencil</v-icon>
-                                            </v-col>
-                                        </v-row>
-                                    </v-btn>
-                                    <v-btn x-large class="py-md-10 py-lg-12 px-lg-10 text-capitalize darkbg" :active-class="$vuetify.theme.dark ? 'greenBtn black--text' : 'greenBtn white--text'">
-                                        <v-row no-gutters>
-                                            <v-col cols="12">
-                                                Pessoa B
-                                            </v-col>
-                                            <v-col cols="12" class="pt-2">
-                                                <v-icon v-if="$vuetify.theme.dark" :color="active == 1 ? 'black' : 'red'">mdi-pencil</v-icon>
-                                                <v-icon v-else :color="active == 1 ? 'white' : 'red'">mdi-pencil</v-icon>
-                                            </v-col>
-                                        </v-row>
-                                    </v-btn>
-                                    <v-btn x-large class="py-md-10 py-lg-12 px-lg-10 text-capitalize darkbg" :active-class="$vuetify.theme.dark ? 'greenBtn black--text' : 'greenBtn white--text'">
-                                    <v-row no-gutters>
-                                            <v-col cols="12">
-                                                Pessoa C
-                                            </v-col>
-                                            <v-col cols="12" class="pt-2">
-                                                <v-icon v-if="$vuetify.theme.dark" :color="active == 2 ? 'black' : 'red'">mdi-pencil</v-icon>
-                                                <v-icon v-else :color="active == 2 ? 'white' : 'red'">mdi-pencil</v-icon>
-                                            </v-col>
-                                        </v-row>
-                                    </v-btn>
-                                    <v-btn x-large class="py-md-10 py-lg-12 px-lg-10 text-capitalize darkbg" :active-class="$vuetify.theme.dark ? 'greenBtn black--text' : 'greenBtn white--text'">
-                                        <v-row no-gutters>
-                                            <v-col cols="12">
-                                                Pessoa D
-                                            </v-col>
-                                            <v-col cols="12" class="pt-2">
-                                                <v-icon v-if="$vuetify.theme.dark" :color="active == 3 ? 'black' : 'red'">mdi-pencil</v-icon>
-                                                <v-icon v-else :color="active == 3 ? 'white' : 'red'">mdi-pencil</v-icon>
                                             </v-col>
                                         </v-row>
                                     </v-btn>
@@ -110,7 +77,7 @@
 
             <v-row class="px-3 editor-area lightbg">
                 <v-col cols="12">
-                    <v-textarea rows="10" class="mt-10" outlined placeholder="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry’s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic."></v-textarea>
+                    <v-textarea rows="10" class="mt-10" outlined placeholder="Lorem Ipsum."></v-textarea>
                 </v-col>
             </v-row>
             <v-bottom-navigation
@@ -124,47 +91,14 @@
                 scroll-threshold="500"
                 class="darkbg"
             >
-                <v-btn class="text-capitalize darkbg" :active-class="$vuetify.theme.dark ? 'greenBtn black--text' : 'greenBtn white--text'">
+                <v-btn v-for="user in onlineUsers" class="text-capitalize darkbg" :active-class="$vuetify.theme.dark ? 'greenBtn black--text' : 'greenBtn white--text'">
                     <v-row no-gutters>
                         <v-col cols="12">
-                            Pessoa A
+                            {{ user.name }}
                         </v-col>
                         <v-col cols="12" class="pt-2">
                             <v-icon v-if="$vuetify.theme.dark" :color="active == 0 ? 'black' : 'red'">mdi-pencil</v-icon>
                             <v-icon v-else :color="active == 0 ? 'white' : 'red'">mdi-pencil</v-icon>
-                        </v-col>
-                    </v-row>
-                </v-btn>
-                <v-btn x-large class="text-capitalize darkbg" :active-class="$vuetify.theme.dark ? 'greenBtn black--text' : 'greenBtn white--text'">
-                    <v-row no-gutters>
-                        <v-col cols="12">
-                            Pessoa B
-                        </v-col>
-                        <v-col cols="12" class="pt-2">
-                            <v-icon v-if="$vuetify.theme.dark" :color="active == 1 ? 'black' : 'red'">mdi-pencil</v-icon>
-                            <v-icon v-else :color="active == 1 ? 'white' : 'red'">mdi-pencil</v-icon>
-                        </v-col>
-                    </v-row>
-                </v-btn>
-                <v-btn x-large class="text-capitalize darkbg" :active-class="$vuetify.theme.dark ? 'greenBtn black--text' : 'greenBtn white--text'">
-                <v-row no-gutters>
-                        <v-col cols="12">
-                            Pessoa C
-                        </v-col>
-                        <v-col cols="12" class="pt-2">
-                            <v-icon v-if="$vuetify.theme.dark" :color="active == 2 ? 'black' : 'red'">mdi-pencil</v-icon>
-                            <v-icon v-else :color="active == 2 ? 'white' : 'red'">mdi-pencil</v-icon>
-                        </v-col>
-                    </v-row>
-                </v-btn>
-                <v-btn x-large class="text-capitalize darkbg" :active-class="$vuetify.theme.dark ? 'greenBtn black--text' : 'greenBtn white--text'">
-                    <v-row no-gutters>
-                        <v-col cols="12">
-                            Pessoa D
-                        </v-col>
-                        <v-col cols="12" class="pt-2">
-                            <v-icon v-if="$vuetify.theme.dark" :color="active == 3 ? 'black' : 'red'">mdi-pencil</v-icon>
-                            <v-icon v-else :color="active == 3 ? 'white' : 'red'">mdi-pencil</v-icon>
                         </v-col>
                     </v-row>
                 </v-btn>
@@ -175,17 +109,100 @@
 
 <script>
 import ChatSidebar from '@/components/ChatSidebar'
+
 export default {
     name: "ViewActivity",
     components: {
         ChatSidebar
     },
+    created() {
+        let pathname = window.location.href;
+        let hash = pathname.substr(pathname.lastIndexOf("/"));
+        let wsUrl = 'ws://' + window.location.host + '/CooperativeEditor/editorws' + hash;
+
+        this.ws = new WebSocket(wsUrl);
+        this.ws.onmessage = this.receiveMessage;
+        this.ws.onerror = this.onSocketError;
+    },
     data() {
         return {
             active: 1,
             openChatDialog: false,
+            onlineUsers: [],
         }
-    }
+    },
+    methods: {
+        receiveMessage(ev) {
+            if (ev.data == 'isLoggedIn') {
+                return;
+            }
+
+            let data = JSON.parse(ev.data);
+            console.log(data);
+
+            switch(data.type){
+                case 'ACK_LOAD_INFORMATION':
+                    for (let i in data.uPCsConnected) {
+                        this.onUserConnect(data.uPCsConnected[i].user);
+                    }
+
+                    //this._setObjective(json.production.objective);
+                    //this._registerUser(json.user.id);
+                    //this._setContributions(json.production.contributions);
+                    //this.userProductionConfigurations = json.production.userProductionConfigurations;
+                    //this._updatePublisher(json.production.userProductionConfigurations);		  			
+                    break;
+
+                case 'ACK_NEW_CONNECTED':
+                    console.log('User connected');
+                    this.onUserConnect(data.userProductionConfiguration.user);
+                    //TODO: display a snackbar
+                    console.log('Users:');
+                    console.log(this.onlineUsers);
+                    break;
+
+                case 'ACK_DISCONNECTION':
+                    this.onUserDisconnect(data.disconnected);
+                    console.log(this.onlineUsers);
+                    break;
+
+                case 'ACK_REQUEST_PARTICIPATION':
+                    //this._updatePublisher(json.userProductionConfigurations);
+                    break;
+
+                case 'ACK_FINISH_PARTICIPATION':
+                    //this._setContribution(json.contribution);
+                    //this._endParticipation(json);
+                    break;
+            }
+        },
+
+        sendMessage(json) {
+        },
+
+        onSocketError(ev) {
+            //TODO: handle errors
+        },
+
+        onUserConnect(user) {
+            this.onlineUsers.push(user);
+        },
+
+        //TODO: replace name with id
+        onUserDisconnect(name) {
+            for (let i in this.onlineUsers) {
+                if (this.onlineUsers[i].name == name) {
+                    this.onlineUsers.splice(i, 1); //Remove user
+                    break;
+                }
+            }
+        },
+
+        leaveActivity() {
+            console.log('Leaving activity');
+            this.ws.close();
+        },
+    },
 }
 </script>
 
