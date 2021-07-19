@@ -14,7 +14,8 @@
 
                         <p class="heading-1 mt-10 primary--text">Editor</p>
 
-                        <v-textarea rows="10" class="mt-10" outlined placeholder="Lorem Ipsum."></v-textarea>
+                        <v-textarea rows="10" class="mt-10" outlined v-model="content" :readonly="!isContributing"></v-textarea>
+                        <v-btn @click="onClickContribute()">{{ isContributing ? 'Finalizar' : 'Contribuir' }}</v-btn>
 
                         <v-card
                             flat
@@ -57,7 +58,7 @@
         <div v-if="$vuetify.breakpoint.smAndDown">
             <v-row no-gutters :class="$vuetify.theme.dark ? 'darkbg px-3' : 'white px-3'">
                 <v-col cols="6" class="pt-3">
-                    <span class="heading-4">
+                    <span class="heading-4" @click="leaveActivity()">
                         <router-link to="/activities" class="router-link primary--text heading-4">
                             <v-icon size="35" color="primary">mdi-chevron-left</v-icon> Sair
                         </router-link>
@@ -77,7 +78,8 @@
 
             <v-row class="px-3 editor-area lightbg">
                 <v-col cols="12">
-                    <v-textarea rows="10" class="mt-10" outlined placeholder="Lorem Ipsum."></v-textarea>
+                    <v-textarea rows="10" class="mt-10" outlined v-model="content" :readonly="!isContributing"></v-textarea>
+                    <v-btn @click="onClickContribute()">{{ isContributing ? 'Finalizar' : 'Contribuir' }}</v-btn>
                 </v-col>
             </v-row>
             <v-bottom-navigation
@@ -128,7 +130,13 @@ export default {
         return {
             active: 1,
             openChatDialog: false,
+            currentUser: {},
+            isContributing: false, //Is current user contributing?
             onlineUsers: [],
+            contributions: [],
+            currentContribution: 0,
+            userProductionConfigurations: null,
+            content: '',
         }
     },
     methods: {
@@ -138,13 +146,18 @@ export default {
             }
 
             let data = JSON.parse(ev.data);
-            console.log(data);
+            console.log('Received message', data);
 
             switch(data.type){
                 case 'ACK_LOAD_INFORMATION':
                     for (let i in data.uPCsConnected) {
                         this.onUserConnect(data.uPCsConnected[i].user);
                     }
+
+                    this.currentUser = data.user;
+                    this.userProductionConfigurations = data.production.userProductionConfigurations;
+                    this.contributions = data.production.contributions; 
+                    this.currentContribution = this.contributions.length - 1;
 
                     //this._setObjective(json.production.objective);
                     //this._registerUser(json.user.id);
@@ -163,21 +176,36 @@ export default {
 
                 case 'ACK_DISCONNECTION':
                     this.onUserDisconnect(data.disconnected);
+                    this.userProductionConfigurations = data.userProductionConfigurations;
                     console.log(this.onlineUsers);
                     break;
 
-                case 'ACK_REQUEST_PARTICIPATION':
-                    //this._updatePublisher(json.userProductionConfigurations);
+                case 'ACK_FINISH_PARTICIPATION':
+                    this.isContributing = false;
+                    this.contributions.push(data.contribution);
+                    this.currentContribution = this.contributions.length - 1;
+                    this.content = this.contributions[this.currentContribution].content;
+                    this.userProductionConfigurations = data.userProductionConfigurations;
+                    //TODO: play end participation sound
+                    //TODO: enable or disable button
+                    console.log('Contributions', this.contributions);
                     break;
 
-                case 'ACK_FINISH_PARTICIPATION':
-                    //this._setContribution(json.contribution);
-                    //this._endParticipation(json);
+                case 'ACK_REQUEST_PARTICIPATION':
+                    this.userProductionConfigurations = data.userProductionConfigurations;
+
+                    if (data.author.id == this.currentUser.id) {
+                        this.isContributing = true;
+                    }
+                    //TODO: enable or disable button
+
+                    //this._updatePublisher(json.userProductionConfigurations);
                     break;
             }
         },
 
         sendMessage(json) {
+            this.ws.send(JSON.stringify(json));
         },
 
         onSocketError(ev) {
@@ -201,6 +229,20 @@ export default {
         leaveActivity() {
             console.log('Leaving activity');
             this.ws.close();
+        },
+
+        onClickContribute() {
+            if (!this.isContributing) {
+                this.sendMessage({ type: 'REQUEST_PARTICIPATION' });
+            } else {
+                let content = { text: this.jsonEscape(this.content) };
+                this.sendMessage({ type: 'FINISH_PARTICIPATION', content: content });
+            }
+            //TODO: disable button
+        },
+
+        jsonEscape(str) {
+            return str ? str.replace(/\n/g, "\\\\n").replace(/\r/g, "\\\\r").replace(/\t/g, "\\\\t").replace(/\"/g, "'") : '';
         },
     },
 }
