@@ -15,7 +15,7 @@
                         <p class="heading-1 mt-10 primary--text">Editor</p>
 
                         <v-textarea rows="10" class="mt-10" outlined v-model="content" :readonly="!isContributing"></v-textarea>
-                        <v-btn @click="onClickContribute()">{{ isContributing ? 'Finalizar' : 'Contribuir' }}</v-btn>
+                        <v-btn @click="onClickContribute()" :disabled="isBlocked">{{ isContributing ? 'Finalizar' : 'Contribuir' }}</v-btn>
 
                         <v-card
                             flat
@@ -79,7 +79,7 @@
             <v-row class="px-3 editor-area lightbg">
                 <v-col cols="12">
                     <v-textarea rows="10" class="mt-10" outlined v-model="content" :readonly="!isContributing"></v-textarea>
-                    <v-btn @click="onClickContribute()">{{ isContributing ? 'Finalizar' : 'Contribuir' }}</v-btn>
+                    <v-btn @click="onClickContribute()" :disabled="isBlocked">{{ isContributing ? 'Finalizar' : 'Contribuir' }}</v-btn>
                 </v-col>
             </v-row>
             <v-bottom-navigation
@@ -132,9 +132,10 @@ export default {
             openChatDialog: false,
             currentUser: {},
             isContributing: false, //Is current user contributing?
+            isBlocked: false, //Is current user blocked?
             onlineUsers: [],
             contributions: [],
-            currentContribution: 0,
+            currentContribution: -1,
             userProductionConfigurations: null,
             content: '',
         }
@@ -158,6 +159,10 @@ export default {
                     this.userProductionConfigurations = data.production.userProductionConfigurations;
                     this.contributions = data.production.contributions; 
                     this.currentContribution = this.contributions.length - 1;
+
+                    if (this.currentContribution > -1) {
+                        this.content = this.contributions[this.currentContribution].content;
+                    }
 
                     //this._setObjective(json.production.objective);
                     //this._registerUser(json.user.id);
@@ -186,6 +191,7 @@ export default {
                     this.currentContribution = this.contributions.length - 1;
                     this.content = this.contributions[this.currentContribution].content;
                     this.userProductionConfigurations = data.userProductionConfigurations;
+                    this.checkUserSituation();
                     //TODO: play end participation sound
                     //TODO: enable or disable button
                     console.log('Contributions', this.contributions);
@@ -193,10 +199,7 @@ export default {
 
                 case 'ACK_REQUEST_PARTICIPATION':
                     this.userProductionConfigurations = data.userProductionConfigurations;
-
-                    if (data.author.id == this.currentUser.id) {
-                        this.isContributing = true;
-                    }
+                    this.checkUserSituation();
                     //TODO: enable or disable button
 
                     //this._updatePublisher(json.userProductionConfigurations);
@@ -229,6 +232,27 @@ export default {
         leaveActivity() {
             console.log('Leaving activity');
             this.ws.close();
+        },
+
+        checkUserSituation() {
+            for (let i in this.userProductionConfigurations) {
+                let upc = this.userProductionConfigurations[i];
+
+                if (upc.user.id == this.currentUser.id) {
+                    if (upc.situation == 'FREE') {
+                        this.isContributing = false;
+                        this.isBlocked = false;
+                    } else if (upc.situation == 'BLOCKED') {
+                        this.isContributing = false;
+                        this.isBlocked = true;
+                    } else if (upc.situation == 'CONTRIBUTING') {
+                        this.isContributing = true;
+                        this.isBlocked = false;
+                    }
+
+                    break;
+                }
+            }
         },
 
         onClickContribute() {
