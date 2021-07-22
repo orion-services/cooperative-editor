@@ -49,7 +49,7 @@
                     </v-container>
                 </v-col>
                 <v-col md="2">
-                    <ChatSidebar />
+                    <ChatSidebar :current-user="currentUser.name" :messages="chatMessages" :on-send="sendChatMessage" />
                 </v-col>
             </v-row>
         </div>
@@ -74,7 +74,7 @@
                 </v-col>
             </v-row>
 
-            <ChatSidebar :dialog="openChatDialog" />
+            <ChatSidebar :dialog="openChatDialog" :current-user="currentUser.name" :messages="chatMessages" :on-send="sendChatMessage" />
 
             <v-row class="px-3 editor-area lightbg">
                 <v-col cols="12">
@@ -125,6 +125,7 @@ export default {
         this.ws = new WebSocket(wsUrl);
         this.ws.onmessage = this.receiveMessage;
         this.ws.onerror = this.onSocketError;
+
     },
     data() {
         return {
@@ -138,6 +139,7 @@ export default {
             currentContribution: -1,
             userProductionConfigurations: null,
             content: '',
+            chatMessages: [],
         }
     },
     methods: {
@@ -164,6 +166,10 @@ export default {
                         this.content = this.contributions[this.currentContribution].content;
                     }
 
+                    for (let i in data.messages) {
+                        this.addChatMessage(data.messages[i].user, data.messages[i].textMessage);
+                    }
+
                     //this._setObjective(json.production.objective);
                     //this._registerUser(json.user.id);
                     //this._setContributions(json.production.contributions);
@@ -172,17 +178,13 @@ export default {
                     break;
 
                 case 'ACK_NEW_CONNECTED':
-                    console.log('User connected');
                     this.onUserConnect(data.userProductionConfiguration.user);
                     //TODO: display a snackbar
-                    console.log('Users:');
-                    console.log(this.onlineUsers);
                     break;
 
                 case 'ACK_DISCONNECTION':
                     this.onUserDisconnect(data.disconnected);
                     this.userProductionConfigurations = data.userProductionConfigurations;
-                    console.log(this.onlineUsers);
                     break;
 
                 case 'ACK_FINISH_PARTICIPATION':
@@ -193,16 +195,17 @@ export default {
                     this.userProductionConfigurations = data.userProductionConfigurations;
                     this.checkUserSituation();
                     //TODO: play end participation sound
-                    //TODO: enable or disable button
-                    console.log('Contributions', this.contributions);
                     break;
 
                 case 'ACK_REQUEST_PARTICIPATION':
                     this.userProductionConfigurations = data.userProductionConfigurations;
                     this.checkUserSituation();
-                    //TODO: enable or disable button
 
                     //this._updatePublisher(json.userProductionConfigurations);
+                    break;
+
+                case 'ACK_SEND_MESSAGE':
+                    this.addChatMessage(data.user, data.message);
                     break;
             }
         },
@@ -262,12 +265,20 @@ export default {
                 let content = { text: this.jsonEscape(this.content) };
                 this.sendMessage({ type: 'FINISH_PARTICIPATION', content: content });
             }
-            //TODO: disable button
         },
 
         jsonEscape(str) {
             return str ? str.replace(/\n/g, "\\\\n").replace(/\r/g, "\\\\r").replace(/\t/g, "\\\\t").replace(/\"/g, "'") : '';
         },
+
+        sendChatMessage(msg) {
+            this.sendMessage({ type: 'SEND_MESSAGE', textMessage: msg });
+        },
+
+        addChatMessage(sender, msg) {
+            let received = !(sender == this.currentUser.name);
+            this.chatMessages.push({ message: msg, received: received, sender: sender });
+        }
     },
 }
 </script>
