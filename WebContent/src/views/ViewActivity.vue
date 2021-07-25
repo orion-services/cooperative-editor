@@ -2,7 +2,6 @@
     <div>
         <!-- Desktop Layout -->
         <div v-if="$vuetify.breakpoint.mdAndUp">
-
             <v-row justify="center" :class="$vuetify.theme.dark ? 'black view-activity' : 'view-activity'">
                 <v-col cols="12" md="12">
                     <v-container class="mt-10">
@@ -18,33 +17,23 @@
                         <v-textarea rows="10" class="mt-10" outlined v-model="content" :readonly="!isContributing"></v-textarea>
                         <v-btn @click="onClickContribute()" :disabled="isBlocked">{{ isContributing ? 'Finalizar' : 'Contribuir' }}</v-btn>
 
-                        <v-card
-                            flat
-                            class="py-5"
-                            color="transparent"
-                        >
+                        <v-card flat class="py-5" color="transparent">
                             <v-card-text>
-                            <v-row
-                                justify="center"
-                            >
-                                <v-btn-toggle
-                                v-model="active"
-                                mandatory
-                                class="darkbg"
-                                >
-                                    <v-btn v-for="user in onlineUsers" x-large class="py-md-10 py-lg-12 px-lg-10 text-capitalize darkbg" :active-class="$vuetify.theme.dark ? 'greenBtn black--text' : 'greenBtn white--text'">
-                                        <v-row no-gutters>
-                                            <v-col cols="12">
-                                                {{ user.name }}
-                                            </v-col>
-                                            <v-col cols="12" class="pt-2">
-                                                <v-icon v-if="$vuetify.theme.dark" :color="active == 0 ? 'black' : 'red'">mdi-pencil</v-icon>
-                                                <v-icon v-else :color="active == 0 ? 'white' : 'red'">mdi-pencil</v-icon>
-                                            </v-col>
-                                        </v-row>
-                                    </v-btn>
-                                </v-btn-toggle>
-                            </v-row>
+                                <v-row justify="center">
+                                    <v-btn-toggle v-model="active" mandatory class="darkbg">
+                                        <v-btn v-for="user in onlineUsers" x-large class="py-md-10 py-lg-12 px-lg-10 text-capitalize darkbg" :active-class="$vuetify.theme.dark ? 'greenBtn black--text' : 'greenBtn white--text'">
+                                            <v-row no-gutters>
+                                                <v-col cols="12">
+                                                    {{ user.name }}
+                                                </v-col>
+                                                <v-col cols="12" class="pt-2">
+                                                    <v-icon v-if="$vuetify.theme.dark" :color="active == 0 ? 'black' : 'red'">mdi-pencil</v-icon>
+                                                    <v-icon v-else :color="active == 0 ? 'white' : 'red'">mdi-pencil</v-icon>
+                                                </v-col>
+                                            </v-row>
+                                        </v-btn>
+                                    </v-btn-toggle>
+                                </v-row>
                             </v-card-text>
                         </v-card>
                     </v-container>

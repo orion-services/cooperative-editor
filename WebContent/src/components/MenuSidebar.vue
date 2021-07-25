@@ -1,12 +1,7 @@
 <template>
     <div class="menu-bar">
-
         <!-- Navigation Drawer -->
-
-        <v-card
-            width="100"
-            v-if="$vuetify.breakpoint.mdAndUp"
-        >
+        <v-card width="100" v-if="$vuetify.breakpoint.mdAndUp">
             <v-navigation-drawer app permanent width="200" class="darkbg">
                 <v-row align="center" justify="center" class="mt-10">
                     <v-col cols="7">
@@ -63,8 +58,6 @@
         </v-card>
 
         <!-- Bottom Navigation -->
-
-        
         <v-bottom-navigation
             v-if="$vuetify.breakpoint.smAndDown && $route.path != '/activities/view'"
             absolute
@@ -76,7 +69,7 @@
             scroll-target="#scroll-threshold-example"
             scroll-threshold="500"
             class="darkbg"
-            >
+        >
             <v-btn @click="$router.push('/activities')" :active-class="$vuetify.theme.dark ? 'primary--text darkbg' : 'primary--text white'">
                 <v-row no-gutters>
                     <v-col cols="12" class="text-center">
@@ -110,9 +103,6 @@
                 </v-row>
             </v-btn>
         </v-bottom-navigation>
-        
-
-
     </div>
 </template>
 

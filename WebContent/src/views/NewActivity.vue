@@ -67,7 +67,6 @@
                         &nbsp;
                     </v-col>
                 </v-row>
-
             </v-col>
         </v-row>
     </div>
