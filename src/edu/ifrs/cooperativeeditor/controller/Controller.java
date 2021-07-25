@@ -58,7 +58,7 @@ public class Controller extends HttpServlet {
 		}
 
 		if (url.equals("index")) {
-			response.sendRedirect(request.getContextPath() + "/private/index.html");
+			response.sendRedirect(request.getContextPath() + "/index.html");
 		} else {
 			
 			String idUser = request.getSession().getAttribute("userId").toString();
