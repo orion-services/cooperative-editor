@@ -13,6 +13,7 @@
                         </span>
 
                         <p class="heading-1 mt-10 primary--text">Editor</p>
+                        <p class="primary--text"><strong>Objetivo:</strong> {{ objective }}</p>
 
                         <v-textarea rows="10" class="mt-10" outlined v-model="content" :readonly="!isContributing"></v-textarea>
                         <v-btn @click="onClickContribute()" :disabled="isBlocked">{{ isContributing ? 'Finalizar' : 'Contribuir' }}</v-btn>
@@ -137,6 +138,7 @@ export default {
             contributions: [],
             currentContribution: -1,
             userProductionConfigurations: null,
+            objective: '',
             content: '',
             chatMessages: [],
         }
@@ -160,6 +162,7 @@ export default {
                     this.userProductionConfigurations = data.production.userProductionConfigurations;
                     this.contributions = data.production.contributions; 
                     this.currentContribution = this.contributions.length - 1;
+                    this.objective = data.production.objective;
 
                     if (this.currentContribution > -1) {
                         this.content = this.contributions[this.currentContribution].content;
@@ -169,11 +172,6 @@ export default {
                         this.addChatMessage(data.messages[i].user, data.messages[i].textMessage);
                     }
 
-                    //this._setObjective(json.production.objective);
-                    //this._registerUser(json.user.id);
-                    //this._setContributions(json.production.contributions);
-                    //this.userProductionConfigurations = json.production.userProductionConfigurations;
-                    //this._updatePublisher(json.production.userProductionConfigurations);		  			
                     break;
 
                 case 'ACK_NEW_CONNECTED':
@@ -199,8 +197,6 @@ export default {
                 case 'ACK_REQUEST_PARTICIPATION':
                     this.userProductionConfigurations = data.userProductionConfigurations;
                     this.checkUserSituation();
-
-                    //this._updatePublisher(json.userProductionConfigurations);
                     break;
 
                 case 'ACK_SEND_MESSAGE':
