@@ -84,7 +84,7 @@ export default {
                     //TODO:
                     //check status code (404, 500, ...)
                     //Display a snackbar
-                    alert('Error: invalid user.');
+                    alert('Erro: usuário inválido.');
                 }
             });
         },
