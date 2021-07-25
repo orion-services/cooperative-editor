@@ -221,10 +221,9 @@ export default {
             this.onlineUsers.push(user);
         },
 
-        //TODO: replace name with id
-        onUserDisconnect(name) {
+        onUserDisconnect(id) {
             for (let i in this.onlineUsers) {
-                if (this.onlineUsers[i].name == name) {
+                if (this.onlineUsers[i].id == id) {
                     this.onlineUsers.splice(i, 1); //Remove user
                     break;
                 }

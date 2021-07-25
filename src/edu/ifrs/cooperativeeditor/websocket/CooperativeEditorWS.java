@@ -219,7 +219,7 @@ public class CooperativeEditorWS {
 			out.addData("size", String.valueOf(activeUsers.get(hashProduction).size()));
 			out.addData("userProductionConfigurations", strUPC.toString());
 			if(user.getUserProductionConfiguration() != null)
-				out.addData("disconnected", user.getName());
+				out.addData("disconnected", user.getId().toString());
 
 			log.log(Level.INFO, "outputMessage: " + out.toString());
 			sendToAll(out.toString(), session, hashProduction);
