@@ -1,66 +1,75 @@
 <template>
-    <div class="lightbg">
-            <v-row justify="center" align="center" class="login mx-3">
-                <v-col md="4" sm="8" cols="12" align-self="center">
-                    <v-card flat class="card-radius logincardbg">
-                        <v-card-text class="py-10">
-                            <v-row class="px-2 mt-5">
-                                <v-col cols="12">
-                                    <v-text-field v-model="goal" label="Objetivo" color="primary" @blur="onGoalBlur()" :error-messages="errors.goal"></v-text-field>
-                                </v-col>
-                                <v-col cols="12">
-                                    <v-text-field type="number" min="1" v-model="minRounds" label="Mínimo de rodadas" @blur="onMinMaxRoundsBlur()" color="primary"></v-text-field>
-                                </v-col>
-                                <v-col cols="12">
-                                    <v-text-field type="number" min="1" v-model="maxRounds" label="Máximo de rodadas" @blur="onMinMaxRoundsBlur()" color="primary"></v-text-field>
-                                </v-col>
-                                <v-col cols="12">
-                                    <v-menu v-model="showStartDatePicker" :close-on-content-click="false" offset-y min-width="auto">
-                                        <template v-slot:activator="{ on, attrs }">
-                                            <v-text-field v-model="startDate" label="Data de início" readonly v-bind="attrs" v-on="on" color="primary"></v-text-field>
-                                        </template>
-                                        <v-date-picker v-model="startDate" color="primary" @input="showStartDatePicker = false"></v-date-picker>
-                                    </v-menu>
-                                </v-col>
-                                <v-col cols="12">
-                                    <v-menu v-model="showStartTimePicker" :close-on-content-click="false" offset-y min-width="auto">
-                                        <template v-slot:activator="{ on, attrs }">
-                                            <v-text-field v-model="startTime" label="Horário de início" readonly v-bind="attrs" v-on="on" color="primary"></v-text-field>
-                                        </template>
-                                        <v-time-picker v-model="startTime" color="primary" @input="showStartTimePicker = false"></v-date-picker>
-                                    </v-menu>
-                                </v-col>
-                                <v-col cols="12">
-                                    <v-autocomplete
-                                        chips
-                                        deletable-chips
-                                        multiple
-                                        hide-no-data
-                                        :items="participantsItems"
-                                        item-text="name"
-                                        item-value="id"
-                                        v-model="participantsValues"
-                                        :search-input.sync="participantsSearch"
-                                        :error-messages="errors.participants"
-                                        @blur="onParticipantsBlur()"
-                                        @change="onChangeParticipants()"
-                                        label="Participantes"
-                                        color="primary"
-                                    ></v-text-field>
-                                </v-col>
-                                <v-col cols="12">
-                                    <v-text-field v-model="evaluationCriteria" label="Critérios de avaliação" color="primary"></v-text-field>
-                                </v-col>
-                            </v-row>
-                            <v-row class="px-3">
-                                <v-col cols="12" md="6" class="mt-3">
-                                    <v-btn color="primary" @click="saveActivity" depressed block rounded large>Salvar</v-btn>
-                                </v-col>
-                            </v-row>
-                        </v-card-text>
-                    </v-card>
-                </v-col>
-            </v-row>
+    <div>
+        <v-row justify="center" align="center" class="login mx-3">
+            <v-col cols="12" md="12">
+                <v-row class="px-2 mt-5">
+                    <v-col cols="12">
+                        <p class="heading-1 mt-10 primary--text">Nova atividade</p>
+                    <v-col>
+                    <v-col cols="12">
+                        <v-text-field v-model="goal" label="Objetivo" color="primary" @blur="onGoalBlur()" :error-messages="errors.goal"></v-text-field>
+                    </v-col>
+                    <v-col cols="12">
+                        <v-text-field type="number" min="1" v-model="minRounds" label="Mínimo de rodadas" @blur="onMinMaxRoundsBlur()" color="primary"></v-text-field>
+                    </v-col>
+                    <v-col cols="12">
+                        <v-text-field type="number" min="1" v-model="maxRounds" label="Máximo de rodadas" @blur="onMinMaxRoundsBlur()" color="primary"></v-text-field>
+                    </v-col>
+                    <v-col cols="12">
+                        <v-menu v-model="showStartDatePicker" :close-on-content-click="false" offset-y min-width="auto">
+                            <template v-slot:activator="{ on, attrs }">
+                                 <v-text-field v-model="startDate" label="Data de início" readonly v-bind="attrs" v-on="on" color="primary"></v-text-field>
+                            </template>
+                            <v-date-picker v-model="startDate" color="primary" @input="showStartDatePicker = false"></v-date-picker>
+                        </v-menu>
+                    </v-col>
+                    <v-col cols="12">
+                        <v-menu v-model="showStartTimePicker" :close-on-content-click="false" offset-y min-width="auto">
+                            <template v-slot:activator="{ on, attrs }">
+                                <v-text-field v-model="startTime" label="Horário de início" readonly v-bind="attrs" v-on="on" color="primary"></v-text-field>
+                            </template>
+                            <v-time-picker v-model="startTime" color="primary" @input="showStartTimePicker = false"></v-date-picker>
+                        </v-menu>
+                    </v-col>
+                    <v-col cols="12">
+                        <v-autocomplete
+                            chips
+                            deletable-chips
+                            multiple
+                            hide-no-data
+                            :items="participantsItems"
+                            item-text="name"
+                            item-value="id"
+                            v-model="participantsValues"
+                            :search-input.sync="participantsSearch"
+                            :error-messages="errors.participants"
+                            @blur="onParticipantsBlur()"
+                            @change="onChangeParticipants()"
+                            label="Participantes"
+                            color="primary"
+                        ></v-text-field>
+                    </v-col>
+                    <v-col cols="12">
+                        <v-text-field v-model="evaluationCriteria" label="Critérios de avaliação" color="primary"></v-text-field>
+                    </v-col>
+                </v-row>
+                <v-row class="px-3">
+                    <v-col cols="12" md="6" class="mt-3">
+                        <v-btn color="primary" @click="saveActivity" depressed block rounded large>Salvar</v-btn>
+                    </v-col>
+                </v-row>
+                <v-row class="px-3">
+                    <!-- Prevent "save" button from getting hidden under the bottom navigation -->
+                    <v-col cols="12" md="6" class="mt-3">
+                        &nbsp;
+                    </v-col>
+                    <v-col cols="12" md="6" class="mt-3">
+                        &nbsp;
+                    </v-col>
+                </v-row>
+
+            </v-col>
+        </v-row>
     </div>
 </template>
 
