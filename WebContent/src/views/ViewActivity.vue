@@ -125,7 +125,6 @@ export default {
         this.ws = new WebSocket(wsUrl);
         this.ws.onmessage = this.receiveMessage;
         this.ws.onerror = this.onSocketError;
-
     },
     data() {
         return {

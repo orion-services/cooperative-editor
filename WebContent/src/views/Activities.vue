@@ -7,8 +7,8 @@
             </div>
 
             <v-row class="mt-10 mb-15 pb-5">
-                <v-col cols="12" sm="6" md="4" :key="i">
-                    <v-card v-for="activity in activities" class="darkbg card-radius" flat @click="openActivity(activity.url)">
+                <v-col cols="12" sm="6" md="4" v-for="activity in activities" @click="openActivity(activity.url)">
+                    <v-card class="darkbg card-radius" flat>
                         <v-card-text>
                             <v-row align="center" justify="center">
                                 <v-col cols="10">
