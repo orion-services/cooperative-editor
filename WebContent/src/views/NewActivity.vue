@@ -55,7 +55,7 @@
                 </v-row>
                 <v-row class="px-3">
                     <v-col cols="12" md="6" class="mt-3">
-                        <v-btn color="primary" @click="saveActivity" depressed block rounded large>Salvar</v-btn>
+                        <v-btn color="primary" @click="saveActivity" :disabled="isSaving" depressed block rounded large>Salvar</v-btn>
                     </v-col>
                 </v-row>
                 <v-row class="px-3">
@@ -103,6 +103,7 @@ export default {
             participantsValuesOld: [],
             evaluationCriteria: '',
             production: {},
+            isSaving: false,
             errors: {
                 goal: '',
                 participants: '',
@@ -124,6 +125,7 @@ export default {
     },
     methods: {
         saveActivity() {
+            this.isSaving = true;
             this.requestSaveProduction();
         },
 
@@ -313,6 +315,7 @@ export default {
                     this.$router.push('/activities/' + data.url);
                 } else {
                     //TODO: handle errors
+                    this.isSaving = false;
                 }
             });
         },
