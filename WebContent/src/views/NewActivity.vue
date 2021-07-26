@@ -124,7 +124,6 @@ export default {
     },
     methods: {
         saveActivity() {
-            this.isSaving = true;
             this.requestSaveProduction();
         },
 
@@ -308,6 +307,8 @@ export default {
                 return;
             }
             this.errors.participants = '';
+
+            this.isSaving = true;
 
             api.doPost(API_URL + 'saveProduction', this.production, (ok, status, data, error) => {
                 if (ok && data.isProductionValid) {
