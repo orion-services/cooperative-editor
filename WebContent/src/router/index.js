@@ -67,7 +67,7 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
     if (!router.app.loginChecked) {
-        return;
+        next(false);
     }
 
     if (to.matched.some(record => record.meta.guest)) {
