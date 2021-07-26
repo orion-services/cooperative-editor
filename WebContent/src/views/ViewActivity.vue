@@ -69,30 +69,29 @@
                     <v-textarea rows="10" class="mt-10" outlined v-model="content" :readonly="!isContributing"></v-textarea>
                     <v-btn @click="onClickContribute()" :disabled="isBlocked">{{ isContributing ? 'Finalizar' : 'Contribuir' }}</v-btn>
                 </v-col>
+
+                <v-col cols="12">
+                    <v-card flat class="py-5" color="transparent">
+                        <v-card-text>
+                            <v-row justify="center">
+                                <v-col cols="6" sm="3" v-for="user in onlineUsers">
+                                    <v-card outlined class="py-md-10 py-lg-12 px-lg-10 text-capitalize" :class="getUserCardClass(user.id)">
+                                        <v-row no-gutters>
+                                            <v-col cols="12">
+                                                {{ user.name }}
+                                            </v-col>
+                                            <v-col cols="12" class="pt-2">
+                                                <v-icon v-if="$vuetify.theme.dark" color="white">mdi-pencil</v-icon>
+                                                <v-icon v-else color="black">mdi-pencil</v-icon>
+                                            </v-col>
+                                        </v-row>
+                                    </v-card>
+                                </v-col>
+                            </v-row>
+                        </v-card-text>
+                    </v-card>
+                </v-col>
             </v-row>
-            <v-bottom-navigation
-                absolute
-                bottom
-                grow
-                hide-on-scroll
-                height="80px"
-                horizontal
-                scroll-target="#scroll-threshold-example"
-                scroll-threshold="500"
-                class="darkbg"
-            >
-                <v-btn v-for="user in onlineUsers" class="text-capitalize darkbg" :active-class="$vuetify.theme.dark ? 'greenBtn black--text' : 'greenBtn white--text'">
-                    <v-row no-gutters>
-                        <v-col cols="12">
-                            {{ user.name }}
-                        </v-col>
-                        <v-col cols="12" class="pt-2">
-                            <v-icon v-if="$vuetify.theme.dark" :color="active == 0 ? 'black' : 'red'">mdi-pencil</v-icon>
-                            <v-icon v-else :color="active == 0 ? 'white' : 'red'">mdi-pencil</v-icon>
-                        </v-col>
-                    </v-row>
-                </v-btn>
-            </v-bottom-navigation>
         </div>
     </div>
 </template>
