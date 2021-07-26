@@ -49,9 +49,6 @@
                             color="primary"
                         ></v-text-field>
                     </v-col>
-                    <v-col cols="12">
-                        <v-text-field v-model="evaluationCriteria" label="Critérios de avaliação" color="primary"></v-text-field>
-                    </v-col>
                 </v-row>
                 <v-row class="px-3">
                     <v-col cols="12" md="6" class="mt-3">
