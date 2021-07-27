@@ -5,7 +5,7 @@
             <v-row justify="center" :class="$vuetify.theme.dark ? 'black view-activity' : 'view-activity'">
                 <v-col cols="12" md="12">
                     <v-container class="mt-10">
-                        <span class="heading-4" @click="leaveActivity()">
+                        <span class="heading-4">
                             <router-link to="/activities" class="router-link primary--text heading-4">
                                 <v-icon size="40" color="primary">mdi-chevron-left</v-icon> Sair da atividade
                             </router-link>
@@ -46,7 +46,7 @@
         <div v-if="$vuetify.breakpoint.smAndDown">
             <v-row no-gutters :class="$vuetify.theme.dark ? 'darkbg px-3' : 'white px-3'">
                 <v-col cols="6" class="pt-3">
-                    <span class="heading-4" @click="leaveActivity()">
+                    <span class="heading-4">
                         <router-link to="/activities" class="router-link primary--text heading-4">
                             <v-icon size="35" color="primary">mdi-chevron-left</v-icon> Sair
                         </router-link>
@@ -112,6 +112,10 @@ export default {
         this.ws = new WebSocket(wsUrl);
         this.ws.onmessage = this.receiveMessage;
         this.ws.onerror = this.onSocketError;
+    },
+    beforeRouteLeave(to, from, next) {
+        this.ws.close();
+        next();
     },
     data() {
         return {
@@ -221,11 +225,6 @@ export default {
                     break;
                 }
             }
-        },
-
-        leaveActivity() {
-            console.log('Leaving activity');
-            this.ws.close();
         },
 
         checkUserSituation() {
