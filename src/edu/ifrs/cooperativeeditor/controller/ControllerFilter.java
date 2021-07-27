@@ -17,10 +17,6 @@
 package edu.ifrs.cooperativeeditor.controller;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -41,15 +37,12 @@ import edu.ifrs.cooperativeeditor.webservice.FormWebService;
  * Servlet Filter implementation class ControllerFilter
  * 
  * @author Lauro Correa Junior
+ * @author Alexandre Almeida
  */
 @WebFilter(urlPatterns = { "/login", "/new-user", "/activities", "/activities/*" })
 public class ControllerFilter implements Filter {
 	
 	private static final Logger log = Logger.getLogger(FormWebService.class.getName());
-
-	private static final Set<String> ALLOWED_PATHS = Collections.unmodifiableSet(new HashSet<String>(Arrays.asList(
-		"/login", "/new-user", "/activities", "/activities/*"
-	)));
 
 	/**
 	 * @see Filter#destroy()
@@ -63,20 +56,24 @@ public class ControllerFilter implements Filter {
 	 */
 	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
 			throws ServletException, IOException {
+
 		HttpServletRequest request = (HttpServletRequest) req;
 		HttpServletResponse response = (HttpServletResponse) res;
 		HttpSession session = request.getSession();
 
+		boolean loggedIn = session.getAttribute("userId") != null;
+		boolean forwardToIndex = false;
+
+		//Remove slashes (/) from the end of the path
 		String path = request.getRequestURI().substring(request.getContextPath().length()).replaceAll("[/]+$", "");
 
-		boolean loggedIn = session.getAttribute("userId") != null;
-		boolean allowedPath = ALLOWED_PATHS.contains(path);
+		if (path.equals("/login") || path.equals("/new-user") ||
+		    path.equals("/activities") || path.startsWith("/activities/")) {
 
-		if (path.startsWith("/activities/")) {
-			allowedPath = true;
+			forwardToIndex = true;
 		}
 
-		if (allowedPath) {
+		if (forwardToIndex) {
 			request.getServletContext().getRequestDispatcher("/").forward(request, response);
 		} else {
 			chain.doFilter(req, res);
