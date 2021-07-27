@@ -81,15 +81,6 @@ public class ControllerFilter implements Filter {
 		} else {
 			chain.doFilter(req, res);
 		}
-
-		/*
-		if (loggedIn || allowedPath) {
-			chain.doFilter(req, res);
-		} else {
-			session.setAttribute("urlBeforeRedirect", request.getRequestURL());
-			response.sendRedirect(request.getContextPath() + "/login.html");
-		}
-		*/
 	}
 
 	@Override
