@@ -184,7 +184,7 @@ public class CooperativeEditorWS {
 			log.log(Level.INFO, "outputMessage: " + outLast.toString());
 			
 		} else {
-			session.getBasicRemote().sendText("isLoggedIn");
+			session.getBasicRemote().sendText("{\"isLoggedIn\":true}");
 		}
 	}
 

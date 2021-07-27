@@ -136,12 +136,12 @@ export default {
     },
     methods: {
         receiveMessage(ev) {
-            if (ev.data == 'isLoggedIn') {
-                return;
-            }
-
             let data = JSON.parse(ev.data);
             console.log('Received message', data);
+
+            if (ev.data.isLoggedIn) {
+                return;
+            }
 
             switch(data.type){
                 case 'ACK_LOAD_INFORMATION':
