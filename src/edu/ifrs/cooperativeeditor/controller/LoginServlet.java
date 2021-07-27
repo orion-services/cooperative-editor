@@ -46,10 +46,11 @@ public class LoginServlet extends HttpServlet {
 	@EJB
 	private DataObject dao;
 
+	//The PUT method is used to create a new user or update an existing one
 	@PUT
 	protected void doPut(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		
+
 		StringBuilder json = new StringBuilder();
 		BufferedReader reader = request.getReader();
 		String linha;
@@ -88,6 +89,7 @@ public class LoginServlet extends HttpServlet {
 		response.getWriter().write(jsonResponseObject.toString());
 	}
 
+	//The GET method is used to log out the user
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -102,6 +104,7 @@ public class LoginServlet extends HttpServlet {
 		response.getWriter().write(jsonResponseObject.toString());
 	}
 
+	//The POST method is used to log in or check if the user is logged in
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
