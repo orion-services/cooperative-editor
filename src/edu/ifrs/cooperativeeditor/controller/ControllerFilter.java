@@ -39,7 +39,7 @@ import edu.ifrs.cooperativeeditor.webservice.FormWebService;
  * @author Lauro Correa Junior
  * @author Alexandre Almeida
  */
-@WebFilter(urlPatterns = { "/login", "/new-user", "/activities", "/activities/*" })
+@WebFilter(urlPatterns = { "/login", "/new-user", "/activities", "/activities/*", "/webservice/*", "/editorws/*" })
 public class ControllerFilter implements Filter {
 	
 	private static final Logger log = Logger.getLogger(FormWebService.class.getName());
@@ -62,6 +62,7 @@ public class ControllerFilter implements Filter {
 		HttpSession session = request.getSession();
 
 		boolean loggedIn = session.getAttribute("userId") != null;
+		boolean loginRequired = false;
 		boolean forwardToIndex = false;
 
 		//Remove slashes (/) from the end of the path
@@ -71,10 +72,14 @@ public class ControllerFilter implements Filter {
 		    path.equals("/activities") || path.startsWith("/activities/")) {
 
 			forwardToIndex = true;
+		} else if (path.startsWith("/webservice/") || path.startsWith("/editorws/")) {
+			loginRequired = true;
 		}
 
 		if (forwardToIndex) {
 			request.getServletContext().getRequestDispatcher("/").forward(request, response);
+		} else if (loginRequired && !loggedIn) {
+			response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
 		} else {
 			chain.doFilter(req, res);
 		}
