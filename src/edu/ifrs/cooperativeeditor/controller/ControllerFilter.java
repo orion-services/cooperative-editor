@@ -44,16 +44,10 @@ public class ControllerFilter implements Filter {
 	
 	private static final Logger log = Logger.getLogger(FormWebService.class.getName());
 
-	/**
-	 * @see Filter#destroy()
-	 */
 	public void destroy() {
 		log.log(Level.INFO, "WebFilter destroy ");
 	}
 
-	/**
-	 * @see Filter#doFilter(ServletRequest, ServletResponse, FilterChain)
-	 */
 	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
 			throws ServletException, IOException {
 
