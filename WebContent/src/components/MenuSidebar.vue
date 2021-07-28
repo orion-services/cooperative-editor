@@ -102,6 +102,17 @@
                     </v-col>
                 </v-row>
             </v-btn>
+
+            <v-btn @click="logout()" :active-class="$vuetify.theme.dark ? 'primary--text' : 'primary--text white'">
+                <v-row no-gutters>
+                    <v-col cols="12" class="text-center pt-2">
+                        <v-icon>mdi-logout</v-icon>
+                    </v-col>
+                    <v-col cols="12" class="text-center">
+                        <span>Sair</span>
+                    </v-col>
+                </v-row>
+            </v-btn>
         </v-bottom-navigation>
     </div>
 </template>
