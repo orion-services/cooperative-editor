@@ -66,6 +66,10 @@
 
             <v-row class="px-3 editor-area lightbg">
                 <v-col cols="12">
+                    <p class="primary--text"><strong>Objetivo:</strong> {{ objective }}</p>
+                </v-col>
+
+                <v-col cols="12">
                     <v-textarea rows="10" class="mt-10" outlined v-model="content" :readonly="!isContributing"></v-textarea>
                     <v-btn @click="onClickContribute()" :disabled="isBlocked">{{ isContributing ? 'Finalizar' : 'Contribuir' }}</v-btn>
                 </v-col>
