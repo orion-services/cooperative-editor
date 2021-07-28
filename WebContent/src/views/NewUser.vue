@@ -93,10 +93,11 @@ export default {
                     alert('Usuário criado com sucesso.');
                     this.$router.push('/login');
                 } else {
-                    //TODO:
-                    //Check status code (404, 500, ...)
-                    //Display an error message on the text fields
-                    alert('Erro: não foi possível criar o usuário.');
+                    if (data.emailInUse) {
+                        this.errors.email = 'E-mail já cadastrado';
+                    } else {
+                        alert('Erro: não foi possível criar o usuário.');
+                    }
                 }
             });
         },

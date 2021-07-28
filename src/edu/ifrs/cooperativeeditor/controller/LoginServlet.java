@@ -51,84 +51,92 @@ public class LoginServlet extends HttpServlet {
 	protected void doPut(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		StringBuilder json = new StringBuilder();
 		BufferedReader reader = request.getReader();
-		String linha;
-		while ((linha = reader.readLine()) != null) {
-			json.append(linha);
+		StringBuilder json = new StringBuilder();
+		String line;
+		while ((line = reader.readLine()) != null) {
+			json.append(line);
 		}
 
 		Gson gson = new Gson();
 		User user = gson.fromJson(json.toString(), User.class);
-		
+		JsonObject responseData = new JsonObject();
 		User userToUpdate = null;
-		
 		boolean loggedIn = request.getSession().getAttribute("userId") != null;
-		if(loggedIn) {
+
+		//Update the logged in user, if there is one
+		if (loggedIn) {
 			String idUser = request.getSession().getAttribute("userId").toString();
 			userToUpdate = dao.getUser(Long.valueOf(idUser));
-		}else {
-			userToUpdate = dao.getUser(user.getEmail());
-		}		
-		
-		if (userToUpdate == null) {
-			dao.mergerUser(user);
-			log.log(Level.INFO, "LoginServlet method doPUT new User ");			
-		} else {			
-			if(loggedIn || userToUpdate.getName() == null || userToUpdate.getName().isEmpty()) {
-				userToUpdate.setEmail(user.getEmail());
-				userToUpdate.setName(user.getName());
-				userToUpdate.setPassword(user.getPassword());
-				dao.mergerUser(userToUpdate);
-				log.log(Level.INFO, "LoginServlet method doPUT merger User ");
-			}
 		}
 
-		JsonObject jsonResponseObject = new JsonObject();
-		jsonResponseObject.addProperty("isUserValid", true);
-		response.getWriter().write(jsonResponseObject.toString());
+		if (userToUpdate == null) { //Creating a new user
+			if (dao.getUser(user.getEmail()) != null) {
+				//A user with the requested email address already exists
+				responseData.addProperty("isUserValid", false);
+				responseData.addProperty("emailInUse", true);
+			} else {
+				dao.mergerUser(user);
+				responseData.addProperty("isUserValid", true);
+			}
+
+			log.log(Level.INFO, "LoginServlet method doPUT new User ");			
+		} else { //Updating an existing user
+			userToUpdate.setEmail(user.getEmail());
+			userToUpdate.setName(user.getName());
+			userToUpdate.setPassword(user.getPassword());
+			dao.mergerUser(userToUpdate);
+			responseData.addProperty("isUserValid", true);
+
+			log.log(Level.INFO, "LoginServlet method doPUT merger User ");
+		}
+
+		response.getWriter().write(responseData.toString());
 	}
 
 	//The GET method is used to log out the user
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		JsonObject jsonResponseObject = new JsonObject();
+
+		JsonObject responseData = new JsonObject();
 
 		request.getSession().removeAttribute("userId");
 		request.getSession().removeAttribute("name");
 		request.getSession().invalidate();
 		
-		log.log(Level.INFO, "LoginServlet method doGET AttributeNames: "+request.getSession().getAttributeNames());
-		jsonResponseObject.addProperty("isLogoutValid", true);
-		response.getWriter().write(jsonResponseObject.toString());
+		log.log(Level.INFO, "LoginServlet method doGET AttributeNames: " + request.getSession().getAttributeNames());
+		responseData.addProperty("isLogoutValid", true);
+		response.getWriter().write(responseData.toString());
 	}
 
 	//The POST method is used to log in or check if the user is logged in
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		StringBuilder json = new StringBuilder();
-		BufferedReader reader = request.getReader();
-		String linha;
-		while ((linha = reader.readLine()) != null)
-			json.append(linha);		
 
-		JsonObject jsonRequestObject = new JsonParser().parse(json.toString()).getAsJsonObject();
-		JsonObject jsonResponseObject = new JsonObject();
+		BufferedReader reader = request.getReader();
+		StringBuilder json = new StringBuilder();
+		String line;
+		while ((line = reader.readLine()) != null) {
+			json.append(line);
+		}
+
 		boolean checkLogin = false;
 		String email = null;
 		String password = null;
+		JsonObject requestData = new JsonParser().parse(json.toString()).getAsJsonObject();
+		JsonObject responseData = new JsonObject();
 
 		try {
-			checkLogin = jsonRequestObject.get("checkLogin").getAsBoolean();
+			checkLogin = requestData.get("checkLogin").getAsBoolean();
 		} catch (Exception e) {
-			// TODO Exception
+			//Do nothing
 		}
 
 		try {
-			email = jsonRequestObject.get("useremail").getAsString();
-			password = jsonRequestObject.get("password").getAsString();
+			email = requestData.get("useremail").getAsString();
+			password = requestData.get("password").getAsString();
 		} catch (Exception e) {
 			// TODO Exception
 		}
@@ -137,28 +145,27 @@ public class LoginServlet extends HttpServlet {
 
 		if (checkLogin) { //Just checking if a user is logged in
 			boolean loggedIn = request.getSession().getAttribute("userId") != null;
-			jsonResponseObject.addProperty("isLoggedIn", loggedIn);
+			responseData.addProperty("isLoggedIn", loggedIn);
 		} else { //Actually logging in
 			User user = dao.getUser(email, password);
 			if (user != null) {
 				request.getSession().setAttribute("userId", user.getId());
 				request.getSession().setAttribute("name", user.getName());
 
-				jsonResponseObject.addProperty("isLoginValid", true);
+				responseData.addProperty("isLoginValid", true);
 
 				if (request.getSession().getAttribute("urlBeforeRedirect") != null) {
 					String url = request.getSession().getAttribute("urlBeforeRedirect").toString();
-					jsonResponseObject.addProperty("urlRedirect", url);
+					responseData.addProperty("urlRedirect", url);
 				}
 
 			} else {
-				jsonResponseObject.addProperty("isLoginValid", false);
+				responseData.addProperty("isLoginValid", false);
 			}
 		}
 		
-		log.log(Level.INFO, "LoginServlet method doPOST AttributeNames: "+request.getSession().getAttributeNames());
+		log.log(Level.INFO, "LoginServlet method doPOST AttributeNames: " + request.getSession().getAttributeNames());
 		
-		response.getWriter().write(jsonResponseObject.toString());
+		response.getWriter().write(responseData.toString());
 	}
-
 }
