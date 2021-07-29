@@ -122,23 +122,14 @@ public class LoginServlet extends HttpServlet {
 			json.append(line);
 		}
 
-		boolean checkLogin = false;
-		String email = null;
-		String password = null;
 		JsonObject requestData = new JsonParser().parse(json.toString()).getAsJsonObject();
 		JsonObject responseData = new JsonObject();
+		boolean checkLogin = false;
 
 		try {
 			checkLogin = requestData.get("checkLogin").getAsBoolean();
 		} catch (Exception e) {
 			//Do nothing
-		}
-
-		try {
-			email = requestData.get("useremail").getAsString();
-			password = requestData.get("password").getAsString();
-		} catch (Exception e) {
-			// TODO Exception
 		}
 
 		response.setContentType("application/json");
@@ -147,19 +138,26 @@ public class LoginServlet extends HttpServlet {
 			boolean loggedIn = request.getSession().getAttribute("userId") != null;
 			responseData.addProperty("isLoggedIn", loggedIn);
 		} else { //Actually logging in
-			User user = dao.getUser(email, password);
-			if (user != null) {
-				request.getSession().setAttribute("userId", user.getId());
-				request.getSession().setAttribute("name", user.getName());
+			try {
+				String email = requestData.get("useremail").getAsString();
+				String password = requestData.get("password").getAsString();
+				User user = dao.getUser(email, password);
 
-				responseData.addProperty("isLoginValid", true);
+				if (user != null) {
+					request.getSession().setAttribute("userId", user.getId());
+					request.getSession().setAttribute("name", user.getName());
 
-				if (request.getSession().getAttribute("urlBeforeRedirect") != null) {
-					String url = request.getSession().getAttribute("urlBeforeRedirect").toString();
-					responseData.addProperty("urlRedirect", url);
+					responseData.addProperty("isLoginValid", true);
+
+					if (request.getSession().getAttribute("urlBeforeRedirect") != null) {
+						String url = request.getSession().getAttribute("urlBeforeRedirect").toString();
+						responseData.addProperty("urlRedirect", url);
+					}
+
+				} else {
+					responseData.addProperty("isLoginValid", false);
 				}
-
-			} else {
+			} catch (Exception e) {
 				responseData.addProperty("isLoginValid", false);
 			}
 		}
