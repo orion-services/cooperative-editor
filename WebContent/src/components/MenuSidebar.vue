@@ -129,7 +129,8 @@ export default {
                     this.$root.isLoggedIn = false;
                     this.$router.push('/login');
                 } else {
-                    //TODO: handle errors
+                    //TODO: improve error handling
+                    alert('Erro: ' + (error ? error : status));
                 }
             });
         },

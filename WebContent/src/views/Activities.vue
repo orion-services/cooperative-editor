@@ -50,7 +50,8 @@ export default {
             if (ok) {
                 this.activities = data;
             } else {
-                //TODO: handle errors
+                //TODO: improve error handling
+                alert('Erro: ' + (error ? error : status));
             }
         });
     },

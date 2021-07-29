@@ -207,7 +207,8 @@ export default {
         },
 
         onSocketError(ev) {
-            //TODO: handle errors
+            //TODO: improve error handling
+            alert('Erro de conexão');
         },
 
         getUserCardClass(id) {

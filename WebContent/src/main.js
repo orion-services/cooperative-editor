@@ -18,7 +18,6 @@ new Vue({
         //Start the app by performing an API request to check if the user is
         //logged in
 
-        //TODO: handle errors
         api.doPost('/CooperativeEditor/login-api', { checkLogin: true }, (ok, status, data, error) => {
             if (ok) {
                 this.loginChecked = true;
@@ -30,7 +29,10 @@ new Vue({
                 } else {
                     router.push('/');
                 }
-            }
+            } else {
+                //TODO: improve error handling
+                alert('Erro: ' + (error ? error : status));
+	    }
         });
     }
 }).$mount('#app')

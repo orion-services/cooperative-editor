@@ -204,7 +204,8 @@ export default {
 
             api.doPost(API_URL + 'userProductionConfiguration', requestData, (ok, status, data, error) => {
                 if (!ok) {
-                    //TODO: handle errors
+                    //TODO: improve error handling
+                    alert('Erro: ' + (error ? error : status));
                     return;
                 }
 
@@ -263,7 +264,8 @@ export default {
 
             api.doPost(API_URL + 'partialSubmit', this.production, (ok, status, data, error) => {
                 if (!ok) {
-                    //TODO: handle errors
+                    //TODO: improve error handling
+                    alert('Erro: ' + (error ? error : status));
                     return;
                 }
 
@@ -276,7 +278,8 @@ export default {
         requestPeopleSuggestion(partialName) {
             api.doGet(API_URL + 'peoplesuggestion/' + partialName, (ok, status, data, error) => {
                 if (!ok) {
-                    //TODO: handle errors
+                    //TODO: improve error handling
+                    alert('Erro: ' + (error ? error : status));
                     return;
                 }
 
@@ -311,8 +314,9 @@ export default {
                 if (ok && data.isProductionValid) {
                     this.$router.push('/activities/' + data.url);
                 } else {
-                    //TODO: handle errors
+                    //TODO: improve error handling
                     this.isSaving = false;
+                    alert('Erro: ' + (error ? error : status));
                 }
             });
         },
