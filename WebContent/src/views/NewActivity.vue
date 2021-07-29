@@ -253,7 +253,7 @@ export default {
         },
 
         requestPartialSubmitProduction() {
-            this.production.participatInProduction = false; //XXX: typo
+            this.production.participateInProduction = false;
             this.production.rubricProductionConfigurations = [];
             this.production.userProductionConfigurations = [];
             this.production.startOfProduction = this.convertDate();
@@ -285,7 +285,7 @@ export default {
         },
 
         requestSaveProduction() {
-            this.production.participatInProduction = false; //XXX: typo
+            this.production.participateInProduction = false;
             this.production.rubricProductionConfigurations = [];
             this.production.userProductionConfigurations = [];
             this.production.startOfProduction = this.convertDate();
