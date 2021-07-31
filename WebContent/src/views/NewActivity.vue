@@ -20,7 +20,7 @@
                             <template v-slot:activator="{ on, attrs }">
                                  <v-text-field v-model="startDate" label="Data de início" readonly v-bind="attrs" v-on="on" color="primary"></v-text-field>
                             </template>
-                            <v-date-picker v-model="startDate" color="primary" @input="showStartDatePicker = false"></v-date-picker>
+                            <v-date-picker v-model="startDate" color="primary" @change="showStartDatePicker = false"></v-date-picker>
                         </v-menu>
                     </v-col>
                     <v-col cols="12">
@@ -28,7 +28,7 @@
                             <template v-slot:activator="{ on, attrs }">
                                 <v-text-field v-model="startTime" label="Horário de início" readonly v-bind="attrs" v-on="on" color="primary"></v-text-field>
                             </template>
-                            <v-time-picker v-model="startTime" color="primary" @input="showStartTimePicker = false"></v-date-picker>
+                            <v-time-picker v-model="startTime" color="primary" @change="showStartTimePicker = false"></v-date-picker>
                         </v-menu>
                     </v-col>
                     <v-col cols="12">
@@ -122,8 +122,6 @@ export default {
     },
     watch: {
         goal(val) {
-            //TODO: decide which other properties to watch while doing partial
-            //submits
             this.requestPartialSubmitProduction(null);
         },
     },
