@@ -105,6 +105,41 @@ public class FormWebService {
 		return json.toString();
 	}
 
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes({ MediaType.TEXT_XML, MediaType.WILDCARD, MediaType.TEXT_PLAIN })
+	@Path("/allusers")
+	public String peopleSuggestion() {
+
+		StringBuilder json = new StringBuilder();
+		List<User> result = dao.getAllUsers();
+
+		StringBuilder strReturn = new StringBuilder();
+		strReturn.append("[ ");
+
+		for (User user : result) {
+			strReturn.append("{");
+			strReturn.append("\"id\":");
+			strReturn.append("\"" + user.getId() + "\",");
+			strReturn.append("\"name\":");
+			if (user.getName() == null) {
+				strReturn.append("\"" + user.getEmail() + "\"");
+			} else {
+				strReturn.append("\"" + user.getName() + "\"");
+			}
+
+			strReturn.append("}");
+			strReturn.append(",");
+		}
+
+		json.append(strReturn.substring(0, strReturn.length() - 1));
+		json.append("]");
+
+		log.log(Level.INFO, "Web service return of /allusers: " + json.toString());
+		return json.toString();
+	}
+
+
 	/**
 	 * rubric person search by the goal
 	 *

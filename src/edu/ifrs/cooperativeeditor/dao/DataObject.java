@@ -204,6 +204,23 @@ public class DataObject {
 	}
 
 	/**
+	 * Return a list with all users from data base
+	 *
+	 * @return List : The users list
+	 */
+	public List<User> getAllUsers() {
+		CriteriaBuilder builder = em.getCriteriaBuilder();
+		CriteriaQuery<User> criteria = builder.createQuery(User.class);
+		Root<User> root = criteria.from(User.class);
+		criteria.select(root);
+		try {
+			return em.createQuery(criteria).setMaxResults(5).getResultList();
+		} catch (NoResultException e) {
+			return null;
+		}
+	}
+
+	/**
 	 * Return rubrics list from data base
 	 *
 	 * @param String: The rubric objective part
