@@ -41,7 +41,6 @@
                             item-text="name"
                             item-value="id"
                             v-model="participantsValues"
-                            :search-input.sync="participantsSearch"
                             :error-messages="errors.participants"
                             @blur="onParticipantsBlur()"
                             @change="onChangeParticipants()"
@@ -52,7 +51,7 @@
                 </v-row>
                 <v-row class="px-3">
                     <v-col cols="12" md="6" class="mt-3">
-                        <v-btn color="primary" @click="saveActivity" :disabled="isSaving" depressed block rounded large>Salvar</v-btn>
+                        <v-btn color="primary" @click="saveActivity" :disabled="isSaving || !usersLoaded" depressed block rounded large>Salvar</v-btn>
                     </v-col>
                 </v-row>
                 <v-row class="px-3">
@@ -99,6 +98,8 @@ export default {
             participantsValuesOld: [],
             evaluationCriteria: '',
             production: {},
+            firstPartialSubmit: false,
+            usersLoaded: false,
             isSaving: false,
             errors: {
                 goal: '',
@@ -106,17 +107,24 @@ export default {
             },
         }
     },
+    created() {
+        api.doGet(API_URL + 'allusers/', (ok, status, data, error) => {
+            if (!ok) {
+                //TODO: improve error handling
+                alert('Erro. Não foi possível carregar a lista de usuários. ' + (error ? error : status));
+                return;
+            }
+
+            this.participantsItems = data;
+            this.usersLoaded = true;
+        });
+
+    },
     watch: {
         goal(val) {
             //TODO: decide which other properties to watch while doing partial
             //submits
-            this.requestPartialSubmitProduction();
-        },
-
-        participantsSearch(val) {
-            if (val) {
-                this.requestPeopleSuggestion(val);
-            }
+            this.requestPartialSubmitProduction(null);
         },
     },
     methods: {
@@ -142,8 +150,16 @@ export default {
                 }
             }
 
-            for (i in added) {
-                this.requestUserProductionConfiguration(added[i]);
+            if (!this.firstPartialSubmit) {
+                this.requestPartialSubmitProduction(() => {
+                    for (i in added) {
+                        this.requestUserProductionConfiguration(added[i]);
+                    }
+                });
+            } else {
+                for (i in added) {
+                    this.requestUserProductionConfiguration(added[i]);
+                }
             }
         },
 
@@ -253,7 +269,7 @@ export default {
             });
         },
 
-        requestPartialSubmitProduction() {
+        requestPartialSubmitProduction(onComplete) {
             this.production.participateInProduction = false;
             this.production.rubricProductionConfigurations = [];
             this.production.userProductionConfigurations = [];
@@ -272,9 +288,16 @@ export default {
                 if (data.id != this.production.id) {
                     this.production.id = data.id;
                 }
+
+                this.firstPartialSubmit = true;
+
+                if (onComplete) {
+                    onComplete();
+                }
             });
         },
 
+        //XXX: unused method (remove?)
         requestPeopleSuggestion(partialName) {
             api.doGet(API_URL + 'peoplesuggestion/' + partialName, (ok, status, data, error) => {
                 if (!ok) {
