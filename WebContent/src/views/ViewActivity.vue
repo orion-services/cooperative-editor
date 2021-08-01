@@ -123,7 +123,6 @@ export default {
     },
     data() {
         return {
-            active: 0,
             openChatDialog: false,
             currentUser: {},
             isContributing: false, //Is current user contributing?
