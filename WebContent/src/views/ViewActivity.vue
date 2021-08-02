@@ -20,10 +20,10 @@
                         <v-card flat class="py-5" color="transparent">
                             <v-card-text>
                                 <v-row justify="center">
-                                    <v-card v-for="user in onlineUsers" outlined class="py-md-10 py-lg-12 px-lg-10 text-capitalize" :class="getUserCardClass(user.id)">
+                                    <v-card v-for="upc in userProductionConfigurations" outlined class="py-md-10 py-lg-12 px-lg-10 text-capitalize" :class="getUserCardClass(upc.user.id)">
                                         <v-row no-gutters>
                                             <v-col cols="12">
-                                                {{ user.name }}
+                                                {{ upc.user.name }}
                                             </v-col>
                                             <v-col cols="12" class="pt-2">
                                                 <v-icon v-if="$vuetify.theme.dark" color="white">mdi-pencil</v-icon>
@@ -78,11 +78,11 @@
                     <v-card flat class="py-5" color="transparent">
                         <v-card-text>
                             <v-row justify="center">
-                                <v-col cols="6" sm="3" v-for="user in onlineUsers">
-                                    <v-card outlined class="py-md-10 py-lg-12 px-lg-10 text-capitalize" :class="getUserCardClass(user.id)">
+                                <v-col cols="6" sm="3" v-for="upc in userProductionConfigurations">
+                                    <v-card outlined class="py-md-10 py-lg-12 px-lg-10 text-capitalize" :class="getUserCardClass(upc.user.id)">
                                         <v-row no-gutters>
                                             <v-col cols="12">
-                                                {{ user.name }}
+                                                {{ upc.user.name }}
                                             </v-col>
                                             <v-col cols="12" class="pt-2">
                                                 <v-icon v-if="$vuetify.theme.dark" color="white">mdi-pencil</v-icon>
@@ -127,7 +127,6 @@ export default {
             currentUser: {},
             isContributing: false, //Is current user contributing?
             isBlocked: false, //Is current user blocked?
-            onlineUsers: [],
             contributingUserId: -1, //Id of the currently contributing user (-1 if none)
             contributions: [],
             currentContribution: -1,
@@ -148,12 +147,8 @@ export default {
 
             switch(data.type){
                 case 'ACK_LOAD_INFORMATION':
-                    for (let i in data.uPCsConnected) {
-                        this.onUserConnect(data.uPCsConnected[i].user);
-                    }
-
                     this.currentUser = data.user;
-                    this.userProductionConfigurations = data.production.userProductionConfigurations;
+                    this.userProductionConfigurations = data.uPCsConnected;
                     this.contributions = data.production.contributions; 
                     this.currentContribution = this.contributions.length - 1;
                     this.objective = data.production.objective;
@@ -169,12 +164,11 @@ export default {
                     break;
 
                 case 'ACK_NEW_CONNECTED':
-                    this.onUserConnect(data.userProductionConfiguration.user);
+                    this.userProductionConfigurations.push(data.userProductionConfiguration);
                     //TODO: display a snackbar
                     break;
 
                 case 'ACK_DISCONNECTION':
-                    this.onUserDisconnect(data.disconnected);
                     this.userProductionConfigurations = data.userProductionConfigurations;
                     break;
 
@@ -216,19 +210,6 @@ export default {
             }
 
             return '';
-        },
-
-        onUserConnect(user) {
-            this.onlineUsers.push(user);
-        },
-
-        onUserDisconnect(id) {
-            for (let i in this.onlineUsers) {
-                if (this.onlineUsers[i].id == id) {
-                    this.onlineUsers.splice(i, 1); //Remove user
-                    break;
-                }
-            }
         },
 
         checkUserSituation() {
