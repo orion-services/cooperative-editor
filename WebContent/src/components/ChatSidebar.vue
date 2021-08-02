@@ -75,20 +75,7 @@
                         </div>
                     </div>
                 </div>
-            
-                <!-- <v-bottom-navigation
-                    v-if="$vuetify.breakpoint.smAndDown"
-                    fixed
-                    bottom
-                    hide-on-scroll
-                    height="80px"
-                    horizontal
-                    scroll-target="#scroll-threshold-example"
-                    scroll-threshold="500"
-                    class="darkbg"
-                >
-                    
-                </v-bottom-navigation> -->
+
                 <v-row class="px-2 darkbg fixed-chat-area">
                     <v-col cols="10">
                         <v-text-field v-model="msg" @keyup.enter="send()" placeholder="Escrever mensagem..."></v-text-field>
