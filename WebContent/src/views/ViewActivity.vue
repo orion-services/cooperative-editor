@@ -126,7 +126,7 @@ export default {
             openChatDialog: false,
             currentUser: {},
             isContributing: false, //Is current user contributing?
-            isBlocked: false, //Is current user blocked?
+            isBlocked: true, //Is current user blocked?
             contributingUserId: -1, //Id of the currently contributing user (-1 if none)
             contributions: [],
             currentContribution: -1,
@@ -165,6 +165,7 @@ export default {
 
                 case 'ACK_NEW_CONNECTED':
                     this.userProductionConfigurations.push(data.userProductionConfiguration);
+                    this.checkUserSituation();
                     //TODO: display a snackbar
                     break;
 
