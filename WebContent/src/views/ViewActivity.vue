@@ -53,7 +53,7 @@
                     </span>
                 </v-col>
                 <v-col cols="6" class="text-right pt-3">
-                    <v-btn class="primary--text text-capitalize" depressed text @click="openChatDialog = !openChatDialog">
+                    <v-btn class="primary--text text-capitalize" depressed text @click="openChatDialog = true">
                         Ver chat <v-icon size="35" color="primary">mdi-message-text-outline</v-icon>
                     </v-btn>
                 </v-col>
@@ -62,7 +62,7 @@
                 </v-col>
             </v-row>
 
-            <ChatSidebar :dialog="openChatDialog" :current-user="currentUser.name" :messages="chatMessages" :on-send="sendChatMessage" />
+            <ChatSidebar :dialog="openChatDialog" :current-user="currentUser.name" :messages="chatMessages" :on-send="sendChatMessage" :on-close="closeChatDialog" />
 
             <v-row class="px-3 editor-area lightbg">
                 <v-col cols="12">
@@ -272,7 +272,11 @@ export default {
         addChatMessage(sender, msg) {
             let received = !(sender == this.currentUser.name);
             this.chatMessages.push({ message: msg, received: received, sender: sender });
-        }
+        },
+
+        closeChatDialog() {
+            this.openChatDialog = false;
+        },
     },
 }
 </script>

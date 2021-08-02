@@ -43,7 +43,7 @@
             <v-card>
                 <v-row :class="$vuetify.theme.dark ? 'chat-header darkbg px-3' : 'chat-header white px-3'">
                     <v-col cols="12">
-                        <v-btn class="primary--text text-capitalize" depressed text @click="dialog = !dialog">
+                        <v-btn class="primary--text text-capitalize" depressed text @click="onClose()">
                             <v-icon size="35" color="primary">mdi-chevron-left</v-icon> Voltar à atividade
                         </v-btn>
                     </v-col>
@@ -105,6 +105,9 @@ export default {
             default: []
         },
         onSend: {
+            type: Function
+        },
+        onClose: {
             type: Function
         }
     },
