@@ -63,7 +63,7 @@ The build system of the front-end is based on NPM, which can be installed on Ubu
 
 ``sudo apt-get install npm``
 
-With NPM installed and assuming Cooperative Editors's source code is at ``$HOME/cooperative-editor``, the front-end can be built by running the commands:
+With NPM installed and assuming Cooperative Editor's source code is at ``$HOME/cooperative-editor``, the front-end can be built by running the commands:
 
 ```bash
 cd $HOME/cooperative-editor/WebContent
@@ -73,11 +73,11 @@ cp -r META-INF WEB-INF dist
 
 ## Building the back-end
 
-* The easiest way to build the back-end is by using Maven, which can be installed on Ubuntu by running the command:
+The easiest way to build the back-end is by using Maven, which can be installed on Ubuntu by running the command:
 
 ``sudo apt-get install maven`` (note: use maven latest)
 
-* After installing Maven, you will need to create the `settings.xml` file in the `.m2/` directory. Thus, add `.m2/settings.xml` to your home or, alternatively, add the `settings.xml` file to the Maven installation at `${maven.home}/conf/settings.xml` (for more information, please check [Maven Web Site](https://maven.apache.org/settings.html)). The `settings.xml` file will contain information to replace some configurations and deploy Cooperative Editor in Wildfly. So, modify the below sample of `settings.xml` file according your server configuration:
+After installing Maven, you will need to create the `settings.xml` file in the `.m2/` directory. Thus, add `.m2/settings.xml` to your home or, alternatively, add the `settings.xml` file to the Maven installation at `${maven.home}/conf/settings.xml` (for more information, please check [Maven Web Site](https://maven.apache.org/settings.html)). The `settings.xml` file will contain information to replace some configurations and deploy Cooperative Editor in Wildfly. So, modify the below sample of `settings.xml` file according your server configuration:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -108,7 +108,7 @@ cp -r META-INF WEB-INF dist
 </settings>
 ```
 
-* After building the front-end, build the back-end by running the commands (assuming Cooperative Editors's source code is at ``$HOME/cooperative-editor``):
+After building the front-end, build the back-end by running the commands (assuming Cooperative Editor's source code is at ``$HOME/cooperative-editor``):
 
 ``bash
 cd $HOME/cooperative-editor
@@ -117,7 +117,7 @@ mvn replacer:replace compiler:compile resources:resources war:war wildfly:deploy
 
 ## Creating a shell script
 
-* If you prefer, you can build Cooperative Editor by creating a shell script on your Ubuntu server, for example:
+If you prefer, you can build Cooperative Editor by creating a shell script on your Ubuntu server, for example:
 
 ```bash
 #!/bin/sh
