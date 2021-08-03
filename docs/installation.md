@@ -49,11 +49,35 @@ And add the Cooperative Editor queue:
 
 # Compilation, packaging and installation with Maven
 
-* The easiest way to use Cooperative Editor project is to install Maven on your machine. In Ubuntu, execute the following command:
+At present, the front-end and the back-end are not integrated on a single build system and thus need to be built separately.
+
+## Downloading
+
+To download Cooperative Editor's source code, run the command:
+
+``git clone https://github.com/rodrigoprestesmachado/cooperative-editor``
+
+## Building the front end
+
+The build system of the front-end is based on NPM, which can be installed on Ubuntu by running the command:
+
+``sudo apt-get install npm``
+
+With NPM installed and assuming Cooperative Editors's source code is at ``$HOME/cooperative-editor``, the front-end can be built by running the commands:
+
+```bash
+cd $HOME/cooperative-editor/WebContent
+npm run-script build
+cp -r META-INF WEB-INF dist
+```
+
+## Building the back-end
+
+* The easiest way to build the back-end is by using Maven, which can be installed on Ubuntu by running the command:
 
 ``sudo apt-get install maven`` (note: use maven latest)
 
-* After install Maven, you will need to create the `settings.xml` file in `.m2/` directory. Thus, add this `.m2/settings.xml` in your home or, alternatively, add the `settings.xml` file in Maven installation `${maven.home}/conf/settings.xml` (for more information, please check [Maven Web Site](https://maven.apache.org/settings.html)). The `settings.xml` file will contain information to replace some configurations and deploy Cooperative Editor in Wildfly. So, modify the below sample of `settings.xml` file according your server configuration:
+* After installing Maven, you will need to create the `settings.xml` file in the `.m2/` directory. Thus, add `.m2/settings.xml` to your home or, alternatively, add the `settings.xml` file to the Maven installation at `${maven.home}/conf/settings.xml` (for more information, please check [Maven Web Site](https://maven.apache.org/settings.html)). The `settings.xml` file will contain information to replace some configurations and deploy Cooperative Editor in Wildfly. So, modify the below sample of `settings.xml` file according your server configuration:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -84,27 +108,41 @@ And add the Cooperative Editor queue:
 </settings>
 ```
 
-* Download the Cooperative Editor:
+* After building the front-end, build the back-end by running the commands (assuming Cooperative Editors's source code is at ``$HOME/cooperative-editor``):
 
-``git clone https://github.com/rodrigoprestesmachado/cooperative-editor``
+``bash
+cd $HOME/cooperative-editor
+mvn replacer:replace compiler:compile resources:resources war:war wildfly:deploy
+``
 
-* Enter in `pom.xml` directory and run an Maven commad:
+## Creating a shell script
 
-``mvn replacer:replace compiler:compile resources:resources war:war wildfly:deploy``
-
-* If you want, you can create a shell script in your Ubuntu server, for example:
+* If you prefer, you can build Cooperative Editor by creating a shell script on your Ubuntu server, for example:
 
 ```bash
 #!/bin/sh
-#
-clear
+
+set -e
+CE_PATH="$HOME/cooperative-editor"
+
+#Download
 git clone https://github.com/rodrigoprestesmachado/cooperative-editor
-cd cooperative-editor
+
+#Build the front-end
+cd "$CE_PATH/WebContent"
+npm run-script build
+cp -r META-INF WEB-INF dist
+
+#Build the back-end
+cd "$CE_PATH"
 mvn replacer:replace compiler:compile resources:resources war:war wildfly:deploy
-cd ..
+
+#Clean up
+cd "$CE_PATH/.."
 rm -Rf cooperative-editor
 ```
 
 # Load data
 
 Once installed, you can load some [sound effects ](https://github.com/rodrigoprestesmachado/cooperative-editor/blob/master/src/META-INF/sql/sound-effect.sql) in the data base
+
