@@ -172,7 +172,7 @@ public class CooperativeEditorWS {
 			User discoveredUser = findUserOnList(session, hashProduction);
 			String jsonUser = "{\"id\":\"" + discoveredUser.getId().toString() + "\",\"name\":\""+ discoveredUser.getName()+"\"}";
 			out.addData("user", jsonUser);
-			out.addData("production", production.toString());
+			out.addData("production", production.toString().replaceAll("\n", "\\\\n"));
 			out.addData("uPCsConnected", strUPC.toString());
 			out.addData("messages", dao.getMessages(hashProduction));
 			
