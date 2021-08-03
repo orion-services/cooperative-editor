@@ -389,7 +389,7 @@ public class CooperativeEditorWS {
 			synchronized (activeUsers.get(hashProduction)) {
 				for (User u : activeUsers.get(hashProduction)) 
 					if (Boolean.TRUE.equals(u.getSession().getUserProperties().get(hashProduction)))
-						u.getSession().getBasicRemote().sendText(message);				
+						u.getSession().getBasicRemote().sendText(message.replaceAll("\n", "\\\\n"));
 			}
 		} catch (IOException ex) {
 			ex.printStackTrace();

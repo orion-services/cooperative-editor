@@ -238,13 +238,9 @@ export default {
             if (!this.isContributing) {
                 this.sendMessage({ type: 'REQUEST_PARTICIPATION' });
             } else {
-                let content = { text: this.jsonEscape(this.content) };
+                let content = { text: this.content };
                 this.sendMessage({ type: 'FINISH_PARTICIPATION', content: content });
             }
-        },
-
-        jsonEscape(str) {
-            return str ? str.replace(/\n/g, "\\\\n").replace(/\r/g, "\\\\r").replace(/\t/g, "\\\\t").replace(/\"/g, "'") : '';
         },
 
         sendChatMessage(msg) {
