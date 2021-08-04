@@ -4,12 +4,8 @@ title: Installation
 nav_order: 3
 ---
 
-# Installation
-
 Cooperative Editor is a JEE application tested on Wildfly (11.0.0.Final) with a
 MySQL (5.5) database over Ubuntu Server (14.04 - trusty)
-
-# Wildfly
 
 **An importante note:** to run Cooperation Editor, Wildfly must use
 `wildfly/standalone/configuration/standalone-full.xml` as its configuration
@@ -21,10 +17,12 @@ file. Thus, rename `standalone-full.xml` to `standalone.xml`.
 1. On your Wildfly control panel, configure a MySQL Datasource (Non-XA) to
 access the database through the JNI name `java:/CooperativeEditorDS`. 
 
-# E-mail configuration
+# E-mail configuration (optional)
 
-Cooperative Editor sends e-mails to invite users to join activities.
-On the file `standalone/configuration/standalone.xml`, find `<subsystem xmlns=”urn:jboss:domain:mail:3.0″>` and add:
+Cooperative Editor can optionally send e-mails to invite users to join
+activities.
+On the file `standalone/configuration/standalone.xml`, find
+`<subsystem xmlns=”urn:jboss:domain:mail:3.0″>` and add:
 ```xml
 <mail-session name=”java:/CooperativeEditorEmail” from=”cooperative.editor@gmail.com” jndi-name=”java:/CooperativeEditorEmail””>
     <smtp-server password=”your password” username=”your gmail account” ssl=”true” 
@@ -99,7 +97,7 @@ on Ubuntu by running the command:
 After installing Maven, you will need to create the `settings.xml` file in the
 `.m2/` directory. Thus, add `.m2/settings.xml` to your home or, alternatively,
 add the `settings.xml` file to the Maven installation at
-`${maven.home}/conf/settings.xml` (for more information, please check
+`${maven.home}/conf/settings.xml` (for more information, please check the
 [Maven Web Site](https://maven.apache.org/settings.html)). The `settings.xml`
 file will contain information to replace some configuration options and deploy
 Cooperative Editor to Wildfly. So, modify the below sample of `settings.xml`
@@ -137,10 +135,20 @@ file according to your server configuration:
 After building the front-end, build the back-end by running the commands
 (assuming Cooperative Editor's source code is at ``$HOME/cooperative-editor``):
 
-``bash
+```bash
 cd $HOME/cooperative-editor
-mvn replacer:replace compiler:compile resources:resources war:war wildfly:deploy
-``
+mvn replacer:replace compiler:compile resources:resources war:war
+```
+
+The generated package will be at ``target/CooperativeEditor.war``.
+
+## Deploying
+
+To deploy Cooperative Editor to Wildfly, run the commands:
+```bash
+cd $HOME/cooperative-editor
+mvn wildfly:deploy
+```
 
 ## Creating a shell script
 
@@ -159,6 +167,7 @@ git clone https://github.com/rodrigoprestesmachado/cooperative-editor
 
 #Build the front-end
 cd "$CE_PATH/WebContent"
+npm install
 npm run-script build
 cp -r META-INF WEB-INF dist
 
@@ -175,5 +184,5 @@ rm -Rf cooperative-editor
 
 Once installed, you can load some
 [sound effects](https://github.com/rodrigoprestesmachado/cooperative-editor/blob/master/src/META-INF/sql/sound-effect.sql)
-into the data base.
+into the database.
 

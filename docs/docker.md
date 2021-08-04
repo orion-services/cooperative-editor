@@ -4,16 +4,31 @@ title: Execute with docker
 nav_order: 2
 ---
 
-# Compiling and run with Docker
+# Building and running with Docker
 
-Download from Github:
+## Install dependencies
 
-    git clone https://github.com/rodrigoprestesmachado/cooperative-editor
-    cd cooperative-editor 
+```bash
+sudo apt-get install git maven npm docker-compose
+```
 
-Configure:
+## Download from GitHub
 
-* Create the `settings.xml` file in `.m2/` directory. Thus, add this `.m2/settings.xml` (for more information, please check [Maven Web Site](https://maven.apache.org/settings.html)). The `settings.xml` file will contain information to replace some configurations to deploy Cooperative Editor in Wildfly. So, modify the below sample of `settings.xml` file according your server configuration:
+```bash
+git clone https://github.com/rodrigoprestesmachado/cooperative-editor
+cd cooperative-editor
+```
+
+## Configure
+
+Create the `settings.xml` file in the `.m2/` directory. Thus, add
+`.m2/settings.xml` to your home or, alternatively, add the `settings.xml` file
+to the Maven installation at `${maven.home}/conf/settings.xml` (for more
+information, please check the
+[Maven Web Site](https://maven.apache.org/settings.html)). The `settings.xml`
+file will contain information to replace some configuration options and deploy
+Cooperative Editor to Wildfly. So, modify the below sample of `settings.xml`
+file according to your server configuration:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -44,9 +59,11 @@ Configure:
 </settings>
 ```
 
-E-mail configuration:
+E-mail configuration (optional):
 
-The current implementation of the Cooperative Editor uses a Gmail account to send e-mail. Thus, configure it in the 'wildfly/standalone.xml' file in the below code.
+The current implementation of the Cooperative Editor can optionally use a Gmail
+account to send e-mail. Thus, configure it on the 'wildfly/standalone.xml' file
+as in the example below:
 
 ```xml
 <mail-session name="java:/CooperativeEditorEmail" jndi-name="java:/CooperativeEditorEmail" from="gmail">
@@ -54,10 +71,34 @@ The current implementation of the Cooperative Editor uses a Gmail account to sen
 </mail-session>
 ```
 
-Compile and package with [Maven](https://maven.apache.org):
+## Build the front-end
 
-    mvn replacer:replace compiler:compile resources:resources war:war
+To build the front-end, assuming the Cooperative Editor's is at
+``$HOME/cooperative-editor``, run the commands:
 
-Execute with [docker-compose](https://docs.docker.com/compose/):
+```bash
+cd $HOME/cooperative-editor/WebContent
+npm install
+npm run-script build
+cp -r META-INF WEB-INF dist
+```
 
-    docker-compose up -d
+## Build the back-end
+
+To build the back-end, assuming the Cooperative Editor's is at
+``$HOME/cooperative-editor``, run the commands:
+
+```bash
+cd $HOME/cooperative-editor
+mvn replacer:replace compiler:compile resources:resources war:war
+```
+
+## Run with Docker
+
+To run Cooperative Editor with Docker, run the commands:
+
+```bash
+cd $HOME/cooperative-editor
+docker-compose up -d
+```
+
