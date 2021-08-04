@@ -69,9 +69,19 @@ Ubuntu by running the command:
 
 ``sudo apt-get install npm``
 
-With NPM installed and assuming Cooperative Editor's source code is at
-``$HOME/cooperative-editor``, the front-end can be built by running the
-commands:
+This document assumes that Cooperative Editor's source code is at
+``$HOME/cooperative-editor``.
+
+Before building the front-end for the first time, the dependencies need to be
+installed by running:
+
+``bash
+cd $HOME/cooperative-editor/WebContent
+npm install
+``
+
+After installing the dependencies, the front-end can be finally built by
+running the commands:
 
 ```bash
 cd $HOME/cooperative-editor/WebContent
