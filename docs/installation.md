@@ -73,10 +73,10 @@ This document assumes that Cooperative Editor's source code is at
 Before building the front-end for the first time, the dependencies need to be
 installed by running:
 
-``bash
+```bash
 cd $HOME/cooperative-editor/WebContent
 npm install
-``
+```
 
 After installing the dependencies, the front-end can be finally built by
 running the commands:
