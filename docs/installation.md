@@ -177,7 +177,7 @@ mvn replacer:replace compiler:compile resources:resources war:war wildfly:deploy
 
 #Clean up
 cd "$CE_PATH/.."
-rm -Rf cooperative-editor
+rm -rf cooperative-editor
 ```
 
 # Load data
