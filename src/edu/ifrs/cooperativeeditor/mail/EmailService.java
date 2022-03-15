@@ -47,7 +47,7 @@ public class EmailService implements MessageListener {
 
 	private static final Logger log = Logger.getLogger(EmailService.class.getName());
 	
-	private static final String EMAIL = "communication";
+	private static final String EMAIL = "rodrigo.prestes@gmail.com";
 	
 	private Session emailSession;
 	

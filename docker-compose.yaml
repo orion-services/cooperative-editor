@@ -27,11 +27,10 @@ services:
             - /sessions
     image:
         build: .
-        depends_on: 
+        depends_on:
             - "db"
             - "phpMyAdmin"
         container_name: ce-app
         ports:
             - 8080:8080
             - 9990:9990
-        

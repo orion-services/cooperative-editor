@@ -4,3 +4,4 @@
 /WebContent/node_modules/
 .settings
 .tern-project
+.history
